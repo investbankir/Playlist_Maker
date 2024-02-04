@@ -3,11 +3,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +13,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/backMainActivity"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_arrow_back"
