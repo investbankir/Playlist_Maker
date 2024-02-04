@@ -49,6 +49,7 @@
             android:theme="@style/GraySwitch"
             android:text="@string/dark_theme"
             android:textSize="@dimen/button_text"
+            android:textColor="@color/black"
             android:paddingStart="@dimen/medium_padding"/>
 
 
