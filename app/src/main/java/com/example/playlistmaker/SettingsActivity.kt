@@ -1,4 +1,4 @@
-package java
+package com.example.playlistmaker
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -14,8 +14,7 @@ class SettingsActivity : AppCompatActivity()  {
 
         val backMainActivity = findViewById<Button>(R.id.backMainActivity)
         backMainActivity.setOnClickListener {
-            val backHeadActivityIntent=Intent(this, MainActivity::class.java)
-            startActivity(backHeadActivityIntent)
+           onBackPressedDispatcher.onBackPressed()
         }
     }
 }

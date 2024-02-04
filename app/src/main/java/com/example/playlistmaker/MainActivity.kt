@@ -14,18 +14,20 @@ class MainActivity : AppCompatActivity() {
         val search_Button = findViewById<Button>(R.id.search_button)
         val searchClickListener:View.OnClickListener = object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                Toast.makeText(this@MainActivity,"Чпоньк! А поиска то пока нет :P",Toast.LENGTH_SHORT).show()
+               val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
+                startActivity(searchIntent)
             }
         }
         search_Button.setOnClickListener(searchClickListener)
 
         val media_library_Button = findViewById<Button>(R.id.media_library_button)
         media_library_Button.setOnClickListener{
-            Toast.makeText(this@MainActivity, "А тут будет Медиатека, точно тебе говорю!", Toast.LENGTH_SHORT).show()
+            val media_libraryIntent = Intent(this, Media_libraryActivity::class.java)
+            startActivity(media_libraryIntent)
         }
         val settings_Button = findViewById<Button>(R.id.settings_button)
         settings_Button.setOnClickListener {
-           val settingsIntent = Intent(this, SearchActivity::class.java)
+           val settingsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settingsIntent)
         }
     }
