@@ -11,22 +11,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val search_Button = findViewById<Button>(R.id.search_button)
+        val searchButton = findViewById<Button>(R.id.search_button)
         val searchClickListener:View.OnClickListener = object : View.OnClickListener {
             override fun onClick(p0: View?) {
                val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
                 startActivity(searchIntent)
             }
         }
-        search_Button.setOnClickListener(searchClickListener)
+        searchButton.setOnClickListener(searchClickListener)
 
-        val media_library_Button = findViewById<Button>(R.id.media_library_button)
-        media_library_Button.setOnClickListener{
-            val media_libraryIntent = Intent(this, Media_libraryActivity::class.java)
-            startActivity(media_libraryIntent)
+        val mediaLibraryButton = findViewById<Button>(R.id.media_library_button)
+        mediaLibraryButton.setOnClickListener{
+            val mediaLibraryIntent = Intent(this, Media_libraryActivity::class.java)
+            startActivity(mediaLibraryIntent)
         }
-        val settings_Button = findViewById<Button>(R.id.settings_button)
-        settings_Button.setOnClickListener {
+        val settingsButton = findViewById<Button>(R.id.settings_button)
+        settingsButton.setOnClickListener {
            val settingsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settingsIntent)
         }
