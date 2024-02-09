@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    style="@style/SettingsBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,11 +16,7 @@
 
         <Button
             android:id="@+id/backMainActivity"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            app:icon="@drawable/ic_arrow_back"
-            app:iconTint="@color/black"
-            android:background="#00FFFFFF" />
+            style="@style/SettingsBackButton" />
 
         <TextView
             android:layout_width="match_parent"
@@ -29,7 +25,6 @@
             android:gravity="center_vertical"
             style="@style/MediumTextStyle"
             android:text="@string/settings"
-            android:textColor="@color/black"
             android:textSize="@dimen/primary_text"
             android:textStyle="bold" />
     </LinearLayout>
@@ -51,7 +46,8 @@
             <com.google.android.material.switchmaterial.SwitchMaterial            style="@style/ButtonsInTheSettings"
                 android:theme="@style/GraySwitch"
                 android:checked="false"
-                app:useMaterialThemeColors="false" />
+                app:useMaterialThemeColors="false"
+                android:id="@+id/themeSwitch" />
         </LinearLayout>
 
 
