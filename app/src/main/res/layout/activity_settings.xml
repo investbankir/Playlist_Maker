@@ -43,8 +43,9 @@
                 style="@style/TextInTheSettings"
                 android:text="@string/dark_theme" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial            style="@style/ButtonsInTheSettings"
-                android:theme="@style/GraySwitch"
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                style="@style/ButtonsInTheSettings"
+                android:theme="@style/ButtonSwitch"
                 android:checked="false"
                 app:useMaterialThemeColors="false"
                 android:id="@+id/themeSwitch" />
@@ -60,7 +61,8 @@
 
             <Button
                 style="@style/ButtonsInTheSettings"
-                app:icon="@drawable/ic_share" />
+                app:icon="@drawable/ic_share"
+                android:id="@+id/toShare"/>
 
         </LinearLayout>
 
@@ -73,7 +75,8 @@
 
             <Button
                 style="@style/ButtonsInTheSettings"
-                app:icon="@drawable/ic_support" />
+                app:icon="@drawable/ic_support"
+                android:id="@+id/massageToSupport"/>
 
         </LinearLayout>
 
@@ -86,7 +89,8 @@
 
             <Button
                 style="@style/ButtonsInTheSettings"
-                app:icon="@drawable/ic_arrow_forward" />
+                app:icon="@drawable/ic_arrow_forward"
+                android:id="@+id/sendUserAgreement"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
     <resources>
-        <style name="GraySwitch">
+        <style name="ButtonSwitch">
             <item name="thumbTint">@color/blue</item>
             <item name="trackTint">@color/blueLight</item>
         </style>
