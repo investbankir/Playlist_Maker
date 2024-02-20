@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/container"
+    style="@style/Seach_Actity"
     tools:context=".SearchActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="12dp"
+        android:layout_gravity="center_vertical"
+        style="@style/MediumTextStyle"
+        android:text="@string/search"
+        android:textSize="@dimen/primary_text"
+        tools:ignore="MissingConstraints" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="16dp"
+        android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/inputEditText"
+        style="@style/seachEditText"/>
+
+    <ImageView
+        android:id="@+id/clearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="10dp"
+        android:layout_gravity="center|end"
+        android:src="@drawable/ic_clear"
+        app:tint="@color/gray"
+        android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>
+
