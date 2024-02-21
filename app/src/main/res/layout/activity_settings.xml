@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/SettingsBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <Button
+            android:id="@+id/backMainActivity"
+            style="@style/SettingsBackButton" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:gravity="center_vertical"
+            style="@style/MediumTextStyle"
+            android:text="@string/settings"
+            android:textSize="@dimen/primary_text"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginTop="24dp">
+
+        <LinearLayout
+            style="@style/MenuBloksSettings">
+
+            <TextView
+                style="@style/TextInTheSettings"
+                android:text="@string/dark_theme" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                style="@style/ButtonsInTheSettings"
+                android:theme="@style/ButtonSwitch"
+                android:checked="false"
+                app:useMaterialThemeColors="false"
+                android:id="@+id/themeSwitch" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/MenuBloksSettings">
+
+            <TextView
+                style="@style/TextInTheSettings"
+                android:text="@string/share_the_app" />
+
+            <Button
+                style="@style/ButtonsInTheSettings"
+                app:icon="@drawable/ic_share"
+                android:id="@+id/toShare"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/MenuBloksSettings">
+
+            <TextView
+                style="@style/TextInTheSettings"
+                android:text="@string/write_to_support" />
+
+            <Button
+                style="@style/ButtonsInTheSettings"
+                app:icon="@drawable/ic_support"
+                android:id="@+id/massageToSupport"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/MenuBloksSettings">
+
+            <TextView
+                style="@style/TextInTheSettings"
+                android:text="@string/user_agreement" />
+
+            <Button
+                style="@style/ButtonsInTheSettings"
+                app:icon="@drawable/ic_arrow_forward"
+                android:id="@+id/sendUserAgreement"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
