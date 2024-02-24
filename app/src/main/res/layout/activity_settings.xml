@@ -44,7 +44,6 @@
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 style="@style/ButtonsInTheSettings"
-                android:theme="@style/ButtonSwitch"
                 android:checked="false"
                 app:useMaterialThemeColors="false"
                 android:id="@+id/themeSwitch" />

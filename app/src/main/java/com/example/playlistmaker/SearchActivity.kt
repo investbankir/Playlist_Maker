@@ -21,7 +21,7 @@
         }
 
         private lateinit var inputEditText: EditText
-        var savedValue: String? = null
+        private var savedValue: String? = null
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_search)
@@ -37,7 +37,7 @@
                 savedValue = ""
                 inputEditText.setText(savedValue)
                 inputEditText.clearFocus()
-                hideKayboard(inputEditText)
+                hideKeyboard(inputEditText)
             }
 
             val textWatcherEditText = object : TextWatcher {
@@ -68,7 +68,7 @@
         }
 
         private fun clearButtonVisibility (s: CharSequence?): Boolean = !s.isNullOrEmpty()
-        private fun hideKayboard(editText: EditText) {
+        private fun hideKeyboard(editText: EditText) {
             val variableHideKayboard = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             variableHideKayboard.hideSoftInputFromWindow(editText.windowToken, 0)
         }
