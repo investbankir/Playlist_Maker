@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="61dp"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:id="@+id/album"
+        android:layout_marginStart="13dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_album_placeholder"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        android:layout_gravity="center" >
+
+        <TextView
+            style="@style/trackName"
+            android:id="@+id/trackName"
+            tools:text="Surrender"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/textUnderTitle"
+                android:id="@+id/artistName"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Godsmack" />
+
+            <ImageView
+                style="@style/dividingUnderTitle" />
+
+            <TextView
+                style="@style/textUnderTitle"
+                android:id="@+id/trackTime"
+                tools:text="3:43"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        style="@style/trackArrowForward"/>
+
+</LinearLayout>

@@ -8,10 +8,13 @@
     import android.util.Log
     import android.view.View
     import android.view.inputmethod.InputMethodManager
+    import android.widget.Button
     import android.widget.EditText
     import android.widget.ImageView
     import android.widget.LinearLayout
     import androidx.core.view.isVisible
+    import androidx.recyclerview.widget.RecyclerView
+
 
     class SearchActivity : AppCompatActivity() {
 
@@ -26,6 +29,11 @@
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_search)
 
+            val backMainActivity = findViewById<Button>(R.id.backMainActivity)
+            backMainActivity.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+            }
+
             savedValue = savedInstanceState?.getString(EDIT_TEXT_KEY)
 
             val seachLinerLayout = findViewById<LinearLayout>(R.id.container)
@@ -39,6 +47,10 @@
                 inputEditText.clearFocus()
                 hideKeyboard(inputEditText)
             }
+
+            val rvTrackList = findViewById<RecyclerView>(R.id.rvTrackList)
+            val trackAdapter = trackListAdapter(trackList)
+            rvTrackList.adapter = trackAdapter
 
             val textWatcherEditText = object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -72,4 +84,5 @@
             val variableHideKayboard = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             variableHideKayboard.hideSoftInputFromWindow(editText.windowToken, 0)
         }
+
     }

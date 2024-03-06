@@ -1,12 +1,16 @@
 package com.example.playlistmaker
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import com.example.playlistmaker.MainActivity
 import com.example.playlistmaker.R
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +21,19 @@ class SettingsActivity : AppCompatActivity() {
         backMainActivity.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
+        themeSwitch.setOnClickListener {
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
+        }
+
         val toShare = findViewById<Button>(R.id.toShare)
         toShare.setOnClickListener {
             val shareText = getString(R.string.shareApp)
