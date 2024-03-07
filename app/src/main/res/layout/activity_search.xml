@@ -10,7 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="56dp">
 
-    <TextView
+        <Button
+            android:id="@+id/backMainActivity"
+            style="@style/SettingsBackButton" />
+
+        <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -46,6 +50,14 @@
         android:visibility="gone" />
 
     </FrameLayout>
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTrackList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/track_item" />
 
 </LinearLayout>
 
