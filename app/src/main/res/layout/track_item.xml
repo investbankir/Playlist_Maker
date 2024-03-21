@@ -47,7 +47,7 @@
 
             <TextView
                 style="@style/textUnderTitle"
-                android:id="@+id/trackTime"
+                android:id="@+id/trackTimeMillis"
                 tools:text="3:43"/>
         </LinearLayout>
     </LinearLayout>

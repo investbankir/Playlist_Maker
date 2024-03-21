@@ -3,18 +3,18 @@ package com.example.playlistmaker
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.Track
 
-class trackListAdapter (
-    private val trackList: ArrayList<Track>): RecyclerView.Adapter<trackViewHolder>() {
+class TrackListAdapter (
+    val trackList: ArrayList<Track>): RecyclerView.Adapter<TrackViewHolder>() {
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): trackViewHolder {
+    ): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
-        return trackViewHolder(view)
+        return TrackViewHolder(view)
     }
-    override fun onBindViewHolder(holder: trackViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
     }
     override fun getItemCount(): Int {
