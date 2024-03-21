@@ -32,6 +32,11 @@
             private const val LOG_TAG = "SeachActivity"
             private const val EDIT_TEXT_KEY = "EDIT_TEXT_KEY"
         }
+
+        enum class SearchForResults {
+            success, nothingWasFound, communicationProblems
+        }
+
         private val iTunesUrl = "https://itunes.apple.com"
 
         val retrofit = Retrofit.Builder()
@@ -113,9 +118,7 @@
         private fun clearButtonVisibility(s: CharSequence?): Boolean {
             return !s.isNullOrEmpty()
         }
-        enum class SearchForResults {
-            success, nothingWasFound, communicationProblems
-        }
+
         private fun showResult (result : SearchForResults ) {
             when (result) {
                 SearchForResults.success -> {
@@ -140,12 +143,12 @@
                 iTunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
                         call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
-                    ) {
-                        if (response.code() == 200) {
+                        response: Response<TrackResponse>) {
+                        if (response.isSuccessful) {
+                            val trackResponse = response.body()
                             trackList.clear()
-                            if (response.body()?.results?.isNotEmpty()==true){
-                                trackList.addAll(response.body()?.results!!)
+                            if (trackResponse?.results?.isNotEmpty()==true){
+                                trackList.addAll(trackResponse.results)
                                 trackAdapter.notifyDataSetChanged()
                             }
                             if (trackList.isEmpty()) {
