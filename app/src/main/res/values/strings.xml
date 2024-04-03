@@ -16,4 +16,6 @@
     <string name="ProblemConnections">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="nothingWasFoundText">Ничего не нашлось</string>
     <string name="RefreshButtonText">Обновить</string>
+    <string name="titleHistorySearch">Вы искали</string>
+    <string name="clearHistoryButton">Очистить историю</string>
 </resources>
