@@ -200,9 +200,6 @@
                                 if (trackResponse?.results?.isNotEmpty()==true){
                                     trackList.addAll(trackResponse.results)
                                     trackAdapter.notifyDataSetChanged()//
-                                 //   for (track in trackList) {
-                                   //     SearchHistory.addTrack(track)
-                                    //}
                                 }
                                 if (trackList.isEmpty()) {
                                     showResult(SearchForResults.nothingWasFound)
