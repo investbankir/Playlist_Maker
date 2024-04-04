@@ -96,6 +96,11 @@
                     trackList.clear()
                     trackAdapter.notifyDataSetChanged()
                     searchResult.visibility = View.GONE
+                    searchHistoryTrackList = SearchHistory.read()
+                    showResult(
+                        if (searchHistoryTrackList.size > 0)
+                            SearchForResults.showSearchHistory
+                    else SearchForResults.empty)
                 }
 
                 clearButtonHistory.setOnClickListener{
@@ -114,7 +119,6 @@
                         savedValue = s.toString()
                         Log.i(LOG_TAG, "Введенное значение: $savedValue")
                         clearButton.isVisible = clearButtonVisibility(s)
-                       // searchHistory.visibility = if (searchHistory.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
                     }
 
                     override fun afterTextChanged(s: Editable?) {}
@@ -137,9 +141,6 @@
                     }
                     false
                 }
-                //inputEditText.setOnFocusChangeListener {view, hasFocus ->
-                  //  searchHistory.visibility = if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
-                //}
             }
             private fun clearButtonVisibility(s: CharSequence?): Boolean {
                 return !s.isNullOrEmpty()
@@ -182,6 +183,7 @@
                         rvTrackList.visibility = View.GONE
                         titleSearchHistory.visibility = View.GONE
                         clearButtonHistory.visibility = View.GONE
+                        imageProblem.setImageResource(R.drawable.ic_communication_problems)
                         searchResult.visibility = View.VISIBLE
                     }
                 }

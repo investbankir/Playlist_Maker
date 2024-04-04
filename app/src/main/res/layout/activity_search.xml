@@ -38,6 +38,7 @@
         android:id="@+id/inputEditText"
         style="@style/seachEditText"
         android:imeOptions="actionDone"
+        android:textCursorDrawable="@drawable/ic_cursor_et"
         android:singleLine="true"/>
 
     <ImageView
