@@ -13,6 +13,13 @@ import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+
+    companion object {
+        private const val LOG_SWITCHER = "log_switcher"
+        private const val KEY_SWITCHER_THEME = "key_for_switcher"
+        private var sharedPrefsSwitch = App.sharedPrefs
+    }
+    var darkTheme = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -23,15 +30,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
-        themeSwitch.setOnClickListener {
-            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                Configuration.UI_MODE_NIGHT_NO -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-                Configuration.UI_MODE_NIGHT_YES -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                }
-            }
+        sharedPrefsSwitch = getSharedPreferences(LOG_SWITCHER, MODE_PRIVATE)
+        themeSwitch.isChecked = sharedPrefsSwitch.getBoolean(
+            KEY_SWITCHER_THEME, resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK==Configuration.UI_MODE_NIGHT_YES)
+        switcherDarkTheme(themeSwitch.isChecked)
+        themeSwitch.setOnCheckedChangeListener{buttonView, isChecked ->
+            sharedPrefsSwitch.edit().putBoolean(KEY_SWITCHER_THEME, isChecked).apply()
+            switcherDarkTheme(isChecked)
         }
 
         val toShare = findViewById<Button>(R.id.toShare)
@@ -62,5 +67,19 @@ class SettingsActivity : AppCompatActivity() {
             offerIntent.data = Uri.parse(offer)
             startActivity(offerIntent)
         }
+    }
+
+    fun switcherDarkTheme(darkThemeEnabled: Boolean) {
+        darkTheme = darkThemeEnabled
+        AppCompatDelegate.setDefaultNightMode(
+            if (darkThemeEnabled) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+        App.sharedPrefs.edit()
+            .putBoolean(App.KEY_SWITCHER_THEME, darkTheme)
+            .apply()
     }
 }

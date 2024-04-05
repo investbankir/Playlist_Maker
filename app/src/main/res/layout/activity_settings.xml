@@ -43,10 +43,9 @@
                 android:text="@string/dark_theme" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/themeSwitch"
                 style="@style/ButtonsInTheSettings"
-                android:checked="false"
-                app:useMaterialThemeColors="false"
-                android:id="@+id/themeSwitch" />
+                app:useMaterialThemeColors="false" />
         </LinearLayout>
 
 
