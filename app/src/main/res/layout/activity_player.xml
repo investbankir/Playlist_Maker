@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="24dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="24dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/modelTrackInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/country"
+            style="@style/textInfoTrack"
+            android:text="Страна"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/trackCountry"
+            style="@style/textInfoTrack"
+            android:text="USA"
+            android:textColor="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/genre"
+            style="@style/textInfoTrack"
+            android:text="Жанр"
+            app:layout_constraintBottom_toTopOf="@id/country"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/trackGenreName"
+            style="@style/textInfoTrack"
+            android:text="Hard rock"
+            android:textColor="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toTopOf="@id/trackCountry"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/releaseDate"
+            style="@style/textInfoTrack"
+            android:text="Год"
+            app:layout_constraintBottom_toTopOf="@id/genre"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/trackReleaseDate"
+            style="@style/textInfoTrack"
+            android:text="2022"
+            android:textColor="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toTopOf="@id/trackGenreName"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/collection"
+            style="@style/textInfoTrack"
+            android:text="Альбом"
+            app:layout_constraintBottom_toTopOf="@id/releaseDate"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"/>
+        <TextView
+            android:id="@+id/trackСollectionName"
+            style="@style/textInfoTrack"
+            android:text="Lighting Up the Sky"
+            android:textColor="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toTopOf="@id/trackReleaseDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="visible"
+            android:maxLines="1"
+            android:maxLength="30"/>
+
+        <TextView
+            android:id="@+id/trackTimeModalTrack"
+            style="@style/textInfoTrack"
+            android:text="Длительность"
+            app:layout_constraintBottom_toTopOf="@id/collection"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/trackTimeMillisModelTrack"
+            style="@style/textInfoTrack"
+            android:text="3:40"
+            android:textColor="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toTopOf="@id/trackСollectionName"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/playbackProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:text="00:30"
+        android:textSize="14sp"
+        android:fontFamily="@font/ys_display_medium"
+        android:textFontWeight="500"
+        android:textColor="?attr/colorOnSecondary"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@id/modelTrackInfo"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"/>
+
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@id/playbackProgress"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:srcCompat="@drawable/ic_playbutton" />
+
+    <ImageButton
+        android:id="@+id/addTrackPlaylist"
+        style="@style/addTrackStyle" />
+
+    <ImageButton
+        android:id="@+id/favorite"
+        style="@style/favoriteStyle"/>
+
+    <TextView
+        android:id="@+id/artistNamePlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Godsmack"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:textFontWeight="400"
+        android:fontFamily="@font/ys_display_medium"
+        app:layout_constraintBottom_toTopOf="@id/playButton"
+        app:layout_constraintStart_toStartOf="@id/leftBorder" />
+
+    <TextView
+        android:id="@+id/trackNamePlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="Surrender"
+        android:textSize="22sp"
+        android:textColor="?attr/colorOnSecondary"
+        android:textFontWeight="400"
+        android:fontFamily="@font/ys_display_medium"
+        app:layout_constraintBottom_toTopOf="@id/artistNamePlayer"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"/>
+
+    <ImageButton
+        android:id="@+id/playlistBackButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/playerAlbum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/trackNamePlayer"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/playlistBackButton"
+        app:srcCompat="@drawable/ic_player_placeholder" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

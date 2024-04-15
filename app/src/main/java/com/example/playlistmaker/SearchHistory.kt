@@ -42,6 +42,7 @@ class SearchHistory {
             }
             searchHistoryTrack.add(0, track)
             write(searchHistoryTrack)
+
         }
 
         fun clearSearchHistory() {
