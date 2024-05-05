@@ -130,4 +130,31 @@
         <item name="android:layout_marginEnd">19dp</item>
         <item name="tint">@color/gray</item>
     </style>
+    <style name="textInfoTrack">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="addTrackStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="layout_constraintBottom_toBottomOf">@id/playButton</item>
+        <item name="layout_constraintStart_toStartOf">@id/leftBorder</item>
+        <item name="layout_constraintTop_toTopOf">@id/playButton</item>
+        <item name="srcCompat">@drawable/ic_addtrackplaylist</item>
+    </style>
+    <style name="favoriteStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>         
+        <item name="srcCompat">@drawable/ic_favorite</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="layout_constraintEnd_toStartOf">@id/rightBorder</item>
+        <item name="layout_constraintTop_toTopOf">@id/playButton</item>
+        <item name="layout_constraintBottom_toBottomOf">@id/playButton</item>
+    </style>
 </resources>

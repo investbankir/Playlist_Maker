@@ -50,7 +50,7 @@
             private val iTunesService = retrofit.create(TrackApiService::class.java)
             private var savedValue: String? = null
             private val trackList = ArrayList<Track>()
-            private val trackAdapter = TrackListAdapter(trackList)
+            private lateinit var trackAdapter : TrackListAdapter
 
             private lateinit var inputEditText: EditText
             private lateinit var clearButton: ImageView
@@ -68,6 +68,8 @@
             override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
                 setContentView(R.layout.activity_search)
+
+                trackAdapter = TrackListAdapter(this, trackList)
 
                 seachLinerLayout = findViewById(R.id.container)
                 inputEditText = findViewById(R.id.inputEditText)

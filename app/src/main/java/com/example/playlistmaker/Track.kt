@@ -1,19 +1,19 @@
 package com.example.playlistmaker
 
-import android.os.Parcel
 import android.os.Parcelable
-import android.provider.ContactsContract.Data
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlinx.parcelize.Parcelize
 
-data class Track (
-    val trackId: Int,
-    val trackName: String,
-    val artistName: String,
-    val trackTimeMillis: Long,
-    val artworkUrl100: String,
-)
+@Parcelize
+data class Track(
+    val trackId: Int?,
+    val trackName: String?,
+    val artistName: String?,
+    val trackTimeMillis: Long?,
+    val artworkUrl100: String?,
+    val collectionName: String?,
+    val releaseDate : String?,
+    val primaryGenreName: String?,
+    val country : String?,
+) : Parcelable{
+    fun getCoverArtwork() = artworkUrl100?.replaceAfterLast('/',"512x512bb.jpg")
+}
