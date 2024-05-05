@@ -57,13 +57,8 @@ class PlayerActivity() : AppCompatActivity() {
             .transform(RoundedCorners(8))
             .into(cover)
 
-        if (trackСollectionName.text.isNotEmpty()) {
-            collection.visibility = View.VISIBLE
-            trackСollectionName.visibility = View.VISIBLE
-        } else {
-            collection.visibility = View.GONE
-            trackСollectionName.visibility = View.GONE
-        }
+        collection.isVisible = trackСollectionName.text.isNotEmpty()
+        trackСollectionName.isVisible = trackСollectionName.text.isNotEmpty()
 
 
         backButton.setOnClickListener{
