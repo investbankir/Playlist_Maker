@@ -31,22 +31,21 @@ class SearchHistory {
             return searchHistoryTrack
         }
 
-        fun addTrack(track: Track) {
-            val searchHistoryTrack = read()
-
-            if (searchHistoryTrack.contains(track)) {
-                searchHistoryTrack.remove(track)
-            }
-            if (searchHistoryTrack.size >= MAX_HISTORY_SIZE) {
-                searchHistoryTrack.removeAt(searchHistoryTrack.size - 1)
-            }
-            searchHistoryTrack.add(0, track)
-            write(searchHistoryTrack)
-
-        }
-
         fun clearSearchHistory() {
             write(ArrayList())
         }
+    }
+    fun addTrack(track: Track) {
+        val searchHistoryTrack = read()
+
+        if (searchHistoryTrack.contains(track)) {
+            searchHistoryTrack.remove(track)
+        }
+        if (searchHistoryTrack.size >= MAX_HISTORY_SIZE) {
+            searchHistoryTrack.removeAt(searchHistoryTrack.size - 1)
+        }
+        searchHistoryTrack.add(0, track)
+        write(searchHistoryTrack)
+
     }
 }

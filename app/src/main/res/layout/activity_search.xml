@@ -100,6 +100,16 @@
         android:layout_marginTop="24dp"
         android:orientation="vertical">
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/progressBar"
+            android:layout_height="@dimen/progressBar"
+            android:indeterminate="true"
+            android:progress="75"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/marginTopProgressBar"
+            android:visibility="visible"/>
+
         <TextView
             android:id="@+id/titleSearchHistory"
             android:layout_width="match_parent"
