@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.player
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,12 +11,11 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.TRACK_DATA
+import com.example.playlistmaker.presentation.ui.search.TRACK_DATA
 import com.example.playlistmaker.data.repository.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.entity.Track
 import com.example.playlistmaker.domain.models.PlayerStateStatus
 import com.example.playlistmaker.domain.repository.PlayerRepository
-import com.example.playlistmaker.presentation.ui.App
 import java.text.SimpleDateFormat
 import java.util.Locale
 

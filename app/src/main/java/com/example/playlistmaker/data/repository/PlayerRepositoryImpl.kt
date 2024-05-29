@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.repository.PlayerRepository
 
 class PlayerRepositoryImpl : PlayerRepository {
 
-    private var mediaPlayer = MediaPlayer()
+    private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerStateStatus.STATE_DEFAULT
     private var audioPlayerListener : ((PlayerStateStatus) -> Unit)? = null
 
@@ -15,6 +15,10 @@ class PlayerRepositoryImpl : PlayerRepository {
             setDataSource(url)
             prepareAsync()
             setOnPreparedListener {
+                playerState = PlayerStateStatus.STATE_PREPARED
+                audioPlayerListener?.invoke(PlayerStateStatus.STATE_PREPARED)
+            }
+            setOnCompletionListener {
                 playerState = PlayerStateStatus.STATE_PREPARED
                 audioPlayerListener?.invoke(PlayerStateStatus.STATE_PREPARED)
             }

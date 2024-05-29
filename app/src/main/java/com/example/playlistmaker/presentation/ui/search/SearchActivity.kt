@@ -20,9 +20,9 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.TrackListAdapter
-import com.example.playlistmaker.TrackResponse
+import com.example.playlistmaker.domain.entity.TrackResponse
 import com.example.playlistmaker.data.network.TrackApiService
+import com.example.playlistmaker.data.repository.SearchHistory
 import com.example.playlistmaker.domain.entity.Track
 import com.example.playlistmaker.presentation.ui.player.PlayerActivity
 import retrofit2.Call
