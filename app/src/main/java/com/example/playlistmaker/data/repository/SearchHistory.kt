@@ -1,12 +1,7 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.repository
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.presentation.ui.App
+import com.example.playlistmaker.domain.entity.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

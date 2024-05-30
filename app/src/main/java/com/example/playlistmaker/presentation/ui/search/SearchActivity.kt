@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.search
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +19,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.entity.TrackResponse
+import com.example.playlistmaker.data.network.TrackApiService
+import com.example.playlistmaker.data.repository.SearchHistory
+import com.example.playlistmaker.domain.entity.Track
+import com.example.playlistmaker.presentation.ui.player.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -108,7 +114,8 @@ class SearchActivity : AppCompatActivity() {
             showResult(
                 if (searchHistoryTrackList.size > 0)
                     SearchForResults.showSearchHistory
-                else SearchForResults.empty)
+                else SearchForResults.empty
+            )
         }
 
         clearButtonHistory.setOnClickListener{
@@ -156,7 +163,7 @@ class SearchActivity : AppCompatActivity() {
         return !s.isNullOrEmpty()
     }
 
-    private fun showResult (result : SearchForResults ) {
+    private fun showResult (result : SearchForResults) {
         when (result) {
             SearchForResults.empty -> {
                 progressBar.visibility = View.GONE
