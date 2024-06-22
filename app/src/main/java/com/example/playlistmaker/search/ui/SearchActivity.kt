@@ -19,11 +19,13 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.network.TrackApiService
 import com.example.playlistmaker.search.data.SearchHistory
+import com.example.playlistmaker.search.presentation.SearchViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import retrofit2.Call
@@ -32,6 +34,8 @@ import retrofit2.Callback
 
 
 class SearchActivity : AppCompatActivity() {
+
+    private lateinit var viewModel : SearchViewModel
     private val searchInteractor = Creator.provideTrackInteractor()
 
     companion object {
@@ -79,6 +83,8 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        viewModel = ViewModelProvider(this) [SearchViewModel::class.java]
 
         trackAdapter = TrackListAdapter(this, trackList) {
             track -> clickToTrack(track)
