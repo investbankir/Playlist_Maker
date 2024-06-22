@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable.Creator
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -27,12 +28,11 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+
 
 
 class SearchActivity : AppCompatActivity() {
+    private val searchInteractor = Creator.provideTrackInteractor()
 
     companion object {
         private const val LOG_TAG = "SeachActivity"
@@ -45,18 +45,19 @@ class SearchActivity : AppCompatActivity() {
         empty, showSearchHistory, success, nothingWasFound, communicationProblems
     }
 
-    private val iTunesUrl = "https://itunes.apple.com"
+//    private val iTunesUrl = "https://itunes.apple.com"
     private var searchHistoryTrackList = ArrayList<Track>()
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchHistoryClass : SearchHistory? = SearchHistory()
 
-    val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesUrl)
-        .addConverterFactory(
-            GsonConverterFactory.create())
-        .build()
-    private val iTunesService = retrofit.create(TrackApiService::class.java)
+  //  val retrofit = Retrofit.Builder()
+    //    .baseUrl(iTunesUrl)
+      //  .addConverterFactory(
+        //    GsonConverterFactory.create())
+        //.build()
+   // private val iTunesService = retrofit.create(TrackApiService::class.java)
+
     private var savedValue: String? = null
     private val trackList = ArrayList<Track>()
     private lateinit var trackAdapter : TrackListAdapter
@@ -220,25 +221,25 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard(inputEditText)
 
             iTunesService.search(inputEditText.text.toString()).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>) {
-                    if (response.isSuccessful) {
-                        val trackResponse = response.body()
-                        trackList.clear()
-                        if (trackResponse?.results?.isNotEmpty()==true){
-                            trackList.addAll(trackResponse.results)
-                            trackAdapter.notifyDataSetChanged()//
-                        }
-                        if (trackList.isEmpty()) {
-                            showResult(SearchForResults.nothingWasFound)
-                        } else {
-                            showResult(SearchForResults.success)
-                        }
-                    } else {
-                        showResult(SearchForResults.communicationProblems)
-                    }
-                }
+               // override fun onResponse(
+               //     call: Call<TrackResponse>,
+             //       response: Response<TrackResponse>) {
+           //         if (response.isSuccessful) {
+         //               val trackResponse = response.body()
+       //                 trackList.clear()
+     //                   if (trackResponse?.results?.isNotEmpty()==true){
+                      //      trackList.addAll(trackResponse.results)
+                    //        trackAdapter.notifyDataSetChanged()//
+                  //      }
+                //        if (trackList.isEmpty()) {
+              //              showResult(SearchForResults.nothingWasFound)
+            //            } else {
+          //                  showResult(SearchForResults.success)
+        //                }
+      //              } else {
+    //                    showResult(SearchForResults.communicationProblems)
+                //    }
+              //  }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                     showResult(SearchForResults.communicationProblems)
