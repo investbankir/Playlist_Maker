@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class SearchViewModel(
@@ -17,12 +15,48 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor
 ) : ViewModel() {
 
-    private val _searchResults = MutableLiveData<List<Track>>()
-    val searchResults: LiveData<List<Track>> = _searchResults
+    private val _state = MutableLiveData<SearchState>()
+    val state: LiveData<SearchState> get() = _state
 
-    private val _searchHistory = MutableLiveData<List<Track>>()
-    val searchHistory: LiveData<List<Track>> = _searchHistory
+    private val _tracks = MutableLiveData<List<Track>>()
+    val tracks: LiveData<List<Track>> get() = _tracks
+    fun searchTracks(query: String) {
+        _state.value = SearchState.LOADING
+        viewModelScope.launch {
+            searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
+                override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
+                    if (foundTracks != null) {
+                        _tracks.value = foundTracks!!// Пришлось проставить !! так как студия подсвечивала ошибку
+                        _state.value = if (foundTracks.isEmpty()) {
+                            SearchState.NOTHING_FOUND
+                        } else {
+                            SearchState.CONTENT
+                        }
+                    } else {
+                        _state.value = SearchState.COMMUNICATION_PROBLEMS
+                    }
+                }
+            })
+        }
+    }
 
+    fun getSearchHistory() {
+        _tracks.value = historyInteractor.getSearchHistory()
+        _state.value = if (_tracks.value.isNullOrEmpty()) {
+            SearchState.NOTHING_FOUND
+        } else {
+            SearchState.HISTORY
+        }
+    }
 
+    fun clearHistory() {
+        historyInteractor.clearHistory()
+        getSearchHistory()
+    }
+
+    fun addTrackHistory(track: Track) {
+        historyInteractor.addTrackToHistory(track)
+        getSearchHistory()
+    }
 
 }
