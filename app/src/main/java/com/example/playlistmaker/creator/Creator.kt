@@ -19,11 +19,11 @@ object Creator {
     private fun getHistoryRepository() : HistoryRepository{
         return HistoryRepositoryImpl()
     }
-    fun getSearchInteractor(context: Context): SearchInteractor {
+    fun provideSearchInteractor(): SearchInteractor {
         return SearchInteractorImpl(getTrackRepository())
     }
 
-    fun getHistoryInteractor(context: Context): HistoryInteractor {
+    fun provideHistoryInteractor(): HistoryInteractor {
         return HistoryInteractorImpl(getHistoryRepository())
     }
 }

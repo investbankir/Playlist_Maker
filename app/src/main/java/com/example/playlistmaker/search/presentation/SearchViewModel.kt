@@ -3,11 +3,12 @@ package com.example.playlistmaker.search.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+
 
 
 class SearchViewModel(
@@ -20,20 +21,24 @@ class SearchViewModel(
 
     private val _tracks = MutableLiveData<List<Track>>()
     val tracks: LiveData<List<Track>> get() = _tracks
+
+    private val executor: Executor = Executors.newSingleThreadExecutor()
+
     fun searchTracks(query: String) {
         _state.value = SearchState.LOADING
-        viewModelScope.launch {
+
+        executor.execute {
             searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
                     if (foundTracks != null) {
-                        _tracks.value = foundTracks!!// Пришлось проставить !! так как студия подсвечивала ошибку
-                        _state.value = if (foundTracks.isEmpty()) {
+                        _tracks.postValue(foundTracks)
+                        _state.postValue(if (foundTracks.isEmpty()) {
                             SearchState.NOTHING_FOUND
                         } else {
                             SearchState.CONTENT
-                        }
+                        })
                     } else {
-                        _state.value = SearchState.COMMUNICATION_PROBLEMS
+                        _state.postValue(SearchState.COMMUNICATION_PROBLEMS)
                     }
                 }
             })
@@ -57,6 +62,25 @@ class SearchViewModel(
     fun addTrackHistory(track: Track) {
         historyInteractor.addTrackToHistory(track)
         getSearchHistory()
+    }
+
+    fun searchDebounced(query: String) {
+        executor.execute {
+            searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
+                override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
+                    if (foundTracks != null) {
+                        _tracks.postValue(foundTracks)
+                        _state.postValue(if (foundTracks.isEmpty()) {
+                            SearchState.NOTHING_FOUND
+                        } else {
+                            SearchState.CONTENT
+                        })
+                    } else {
+                        _state.postValue(SearchState.COMMUNICATION_PROBLEMS)
+                    }
+                }
+            })
+        }
     }
 
 }

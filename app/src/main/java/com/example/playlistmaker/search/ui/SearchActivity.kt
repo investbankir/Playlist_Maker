@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -25,43 +24,20 @@ import com.example.playlistmaker.search.presentation.SearchState
 import com.example.playlistmaker.search.presentation.SearchViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
-//import com.example.playlistmaker.search.data.SearchHistory
 import com.example.playlistmaker.search.presentation.SearchViewModelFactory
-
-
-
+import com.example.playlistmaker.creator.Creator
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var viewModel: SearchViewModel
-
-
     companion object {
         private const val LOG_TAG = "SeachActivity"
         private const val EDIT_TEXT_KEY = "EDIT_TEXT_KEY"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
-/////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////
-    //////////////////////
-
-
-//    private val iTunesUrl = "https://itunes.apple.com"
-    private var searchHistoryTrackList = ArrayList<Track>()
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-
-  //  val retrofit = Retrofit.Builder()
-    //    .baseUrl(iTunesUrl)
-      //  .addConverterFactory(
-        //    GsonConverterFactory.create())
-        //.build()
-   // private val iTunesService = retrofit.create(TrackApiService::class.java)
-
     private var savedValue: String? = null
+    private val handler = Handler(Looper.getMainLooper())
     private val trackList = ArrayList<Track>()
-    private lateinit var trackAdapter : TrackListAdapter
+    private lateinit var trackAdapter: TrackListAdapter
 
     private lateinit var inputEditText: EditText
     private lateinit var clearButton: ImageView
@@ -72,17 +48,22 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var imageProblem: ImageView
     private lateinit var seachResultStatus: TextView
     private lateinit var refreshButton: Button
-    private lateinit var searchHistory : LinearLayout
+    private lateinit var searchHistory: LinearLayout
     private lateinit var titleSearchHistory: TextView
     private lateinit var clearButtonHistory: Button
     private lateinit var progressBar: ProgressBar
-  //  private val searchHistoryClass : SearchHistory? = SearchHistory()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        viewModel = ViewModelProvider(this, SearchViewModelFactory(this))[SearchViewModel::class.java]
+        val factory = SearchViewModelFactory(
+            Creator.provideSearchInteractor(),
+            Creator.provideHistoryInteractor()
+        )
+
+        viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
 
         viewModel.state.observe(this, Observer { state ->
             when (state) {
@@ -99,10 +80,8 @@ class SearchActivity : AppCompatActivity() {
             trackAdapter.notifyDataSetChanged()
         })
 
-        viewModel.getSearchHistory()
-        ///////////////////////////
-        trackAdapter = TrackListAdapter(this, trackList) {
-            track -> clickToTrack(track)
+        trackAdapter = TrackListAdapter(this, trackList) { track ->
+            clickToTrack(track)
         }
 
         seachLinerLayout = findViewById(R.id.container)
@@ -117,11 +96,34 @@ class SearchActivity : AppCompatActivity() {
         titleSearchHistory = findViewById(R.id.titleSearchHistory)
         progressBar = findViewById(R.id.progressBar)
         backMainActivity = findViewById(R.id.backMainActivity)
+        rvTrackList = findViewById(R.id.rvTrackList)
+
         backMainActivity.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        setupUI()
+
         savedValue = savedInstanceState?.getString(EDIT_TEXT_KEY)
+        inputEditText.setText(savedValue)
+
+        viewModel.getSearchHistory()
+    }
+
+    private fun setupUI() {
+        rvTrackList.adapter = trackAdapter
+
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                savedValue = s.toString()
+                clearButton.isVisible = clearButtonVisibility(s)
+                searchDebounce()
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         clearButton.setOnClickListener {
             inputEditText.text.clear()
@@ -129,75 +131,63 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard(inputEditText)
         }
 
-        clearButtonHistory.setOnClickListener {
-            viewModel.clearHistory()
-        }
-
-        rvTrackList = findViewById(R.id.rvTrackList)
-        rvTrackList.adapter = trackAdapter
-
-        val textWatcherEditText = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                savedValue = s.toString()
-                Log.i(LOG_TAG, "Введенное значение: $savedValue")
-                clearButton.isVisible = clearButtonVisibility(s)
-                searchDebounce()
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-
-        }
-
-       // inputEditText.addTextChangedListener(textWatcherEditText)
-       // searchHistoryTrackList = SearchHistory.read()
-
-        viewModel.getSearchHistory()
-        hideKeyboard(inputEditText)
-
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 searchTracks()
                 true
+            } else {
+                false
             }
-            false
         }
     }
+
     private fun clearButtonVisibility(s: CharSequence?): Boolean {
         return !s.isNullOrEmpty()
     }
 
-
     private fun searchTracks() {
-        val query = inputEditText.text.toString()
+        val query = inputEditText.text.toString().trim()
         if (query.isNotEmpty()) {
             viewModel.searchTracks(query)
             hideKeyboard(inputEditText)
         }
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private val searchRunnable = Runnable {
+        val query = inputEditText.text.toString().trim()
+        if (query.isNotEmpty()) {
+            viewModel.searchDebounced(query)
+        }
+    }
+    private fun clickToTrack(track: Track) {
+        viewModel.addTrackHistory(track)
+        val playerIntent = Intent(this, PlayerActivity::class.java)
+        playerIntent.putExtra("track", track)
+        startActivity(playerIntent)
+    }
     private fun showLoading() {
         progressBar.isVisible = true
         rvTrackList.isVisible = false
-        searchResult.isVisible = false
-        searchHistory.isVisible = false
+        //searchResult.isVisible = false
+        //searchHistory.isVisible = false
     }
-
     private fun showContent() {
         progressBar.isVisible = false
         rvTrackList.isVisible = true
-        searchResult.isVisible = false
-        searchHistory.isVisible = false
+       // searchResult.isVisible = false
+        //searchHistory.isVisible = false
     }
-
     private fun showHistory() {
         progressBar.isVisible = false
         rvTrackList.isVisible = true
-        searchResult.isVisible = false
-        searchHistory.isVisible = true
+      //  searchResult.isVisible = false
+        //searchHistory.isVisible = true
     }
-
     private fun showNothingFound() {
         progressBar.isVisible = false
         rvTrackList.isVisible = false
@@ -207,7 +197,6 @@ class SearchActivity : AppCompatActivity() {
         refreshButton.isVisible = false
         searchHistory.isVisible = false
     }
-
     private fun showCommunicationProblems() {
         progressBar.isVisible = false
         rvTrackList.isVisible = false
@@ -217,43 +206,18 @@ class SearchActivity : AppCompatActivity() {
         refreshButton.isVisible = false
         searchHistory.isVisible = false
     }
+
+    private fun hideKeyboard(editText: EditText) {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EDIT_TEXT_KEY, savedValue)
     }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedValue = savedInstanceState.getString(EDIT_TEXT_KEY)
         inputEditText.setText(savedValue)
     }
-    private fun hideKeyboard(editText: EditText) {
-        val variableHideKayboard = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        variableHideKayboard.hideSoftInputFromWindow(editText.windowToken, 0)
-    }
-
-    val searchRunnable = Runnable { searchTracks() }
-    fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-    private fun clickToTrack(track: Track) {
-        if (clickDebounce()) {
-            //searchHistoryClass?.addTrack(track)
-            viewModel.addTrackHistory(track)
-
-            val playerIntent = Intent(this, PlayerActivity::class.java)
-            playerIntent.putExtra("track", track)
-            startActivity(playerIntent)
-        }
-    }
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
 }
