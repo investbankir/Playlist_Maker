@@ -1,14 +1,14 @@
-package com.example.playlistmaker.player.presentation
+package com.example.playlistmaker.player.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.player.domain.repositoty.PlayerRepository
+import com.example.playlistmaker.player.domain.api.PlayerInteractor
 
 class PlayerViewModelFactory(
-    private val playerRepository: PlayerRepository) : ViewModelProvider.Factory {
+    private val playerInteractor: PlayerInteractor) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass : Class<T>) : T {
             if (modelClass.isAssignableFrom(PlayerViewModel::class.java)) {
-                return PlayerViewModel(playerRepository) as T
+                return PlayerViewModel(playerInteractor) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

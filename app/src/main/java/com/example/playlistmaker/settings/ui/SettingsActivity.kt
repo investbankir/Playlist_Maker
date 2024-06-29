@@ -1,57 +1,58 @@
 package com.example.playlistmaker.settings.ui
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.settings.domain.interactor.SettingsInteractorImpl
-import com.example.playlistmaker.settings.presentation.SettingsViewModel
-import com.example.playlistmaker.settings.presentation.SettingsViewModelFactory
-import com.example.playlistmaker.sharing.domain.interactor.SharingInteractorImpl
-import com.example.playlistmaker.sharing.presentation.SharingViewModel
-import com.example.playlistmaker.sharing.presentation.SharingViewModelFactory
-import com.example.playlistmaker.sharing.data.ResourcesProvider
+import com.example.playlistmaker.creator.Creator
 import com.google.android.material.switchmaterial.SwitchMaterial
-
 class SettingsActivity : AppCompatActivity() {
 
-    private val settingsViewModel: SettingsViewModel by viewModels {
-        SettingsViewModelFactory(SettingsInteractorImpl(getSharedPreferences("settings", MODE_PRIVATE)))
-    }
-
-
-    private val sharingViewModel: SharingViewModel by viewModels {
-        SharingViewModelFactory(SharingInteractorImpl(ResourcesProvider(this)))
-    }
+    private lateinit var viewModel: SettingsViewModel
+    private lateinit var themeSwitch: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val backMainActivity = findViewById<Button>(R.id.backMainActivity)
-        backMainActivity.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+        themeSwitch = findViewById(R.id.themeSwitch)
+
+        val factory = SettingsViewModelFactory(
+            Creator.provideSettingsInteractor(),
+            Creator.provideSharingInteractor()
+        )
+
+        viewModel = ViewModelProvider(this, factory).get(SettingsViewModel::class.java)
+
+        viewModel.settingsState.observe(this) { state ->
+            //themeSwitch.isChecked = state.isDarkThemeEnabled
+            handleSettingsState(state)
         }
 
-        val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
+        setupUi()
+    }
 
-        settingsViewModel.darkThemeEnabled.observe(this) { isEnabled ->
-            themeSwitch.isChecked = isEnabled
-        }
+    private fun handleSettingsState(state: SettingsState) {
+      //  val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
+        themeSwitch.isChecked = state.isDarkThemeEnabled
+    }
 
+    private fun setupUi() {
+
+      //  val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
         themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            settingsViewModel.setDarkTheme(isChecked)
+            viewModel.setDarkTheme(isChecked)
         }
 
         val toShare = findViewById<Button>(R.id.toShare)
         toShare.setOnClickListener {
-            startActivity(sharingViewModel.getShareIntent(getString(R.string.shareApp)))
+            startActivity(viewModel.getShareIntent(getString(R.string.shareApp)))
         }
 
         val messageToSupport = findViewById<Button>(R.id.massageToSupport)
         messageToSupport.setOnClickListener {
             startActivity(
-                sharingViewModel.getSupportEmailIntent(
+                viewModel.getSupportEmailIntent(
                     getString(R.string.emailDeveloper),
                     getString(R.string.titleMassageSupport),
                     getString(R.string.textMassageSupport)
@@ -61,7 +62,12 @@ class SettingsActivity : AppCompatActivity() {
 
         val sendUserAgreement = findViewById<Button>(R.id.sendUserAgreement)
         sendUserAgreement.setOnClickListener {
-            startActivity(sharingViewModel.getUserAgreementIntent(getString(R.string.offer)))
+            startActivity(viewModel.getUserAgreementIntent(getString(R.string.offer)))
+        }
+
+        val backMainActivity = findViewById<Button>(R.id.backMainActivity)
+        backMainActivity.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.presentation
+package com.example.playlistmaker.search.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.SearchState
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -47,11 +48,7 @@ class SearchViewModel(
 
     fun getSearchHistory() {
         _tracks.value = historyInteractor.getSearchHistory()
-        _state.value = if (_tracks.value.isNullOrEmpty()) {
-            SearchState.NOTHING_FOUND
-        } else {
-            SearchState.HISTORY
-        }
+        _state.value = SearchState.HISTORY
     }
 
     fun clearHistory() {

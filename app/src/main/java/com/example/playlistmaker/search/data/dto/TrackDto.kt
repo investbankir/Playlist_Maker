@@ -18,16 +18,4 @@ data class TrackDto(
     val previewUrl : String?
 ) : Parcelable {
     fun getCoverArtwork() = artworkUrl100?.replaceAfterLast('/',"512x512bb.jpg")
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Track) return false
-
-        if (trackId != other.trackId) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return trackId ?: 0
-    }
 }

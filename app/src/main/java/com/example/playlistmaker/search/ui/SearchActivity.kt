@@ -20,11 +20,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.search.presentation.SearchState
-import com.example.playlistmaker.search.presentation.SearchViewModel
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.presentation.SearchViewModelFactory
 import com.example.playlistmaker.creator.Creator
 
 class SearchActivity : AppCompatActivity() {
@@ -63,7 +60,7 @@ class SearchActivity : AppCompatActivity() {
             Creator.provideHistoryInteractor()
         )
 
-        viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
+            viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
 
         viewModel.state.observe(this, Observer { state ->
             when (state) {
@@ -120,7 +117,7 @@ class SearchActivity : AppCompatActivity() {
                 savedValue = s.toString()
                 clearButton.isVisible = clearButtonVisibility(s)
                 searchDebounce()
-            }
+                }
 
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -129,6 +126,11 @@ class SearchActivity : AppCompatActivity() {
             inputEditText.text.clear()
             viewModel.getSearchHistory()
             hideKeyboard(inputEditText)
+        }
+
+        clearButtonHistory.setOnClickListener {
+            viewModel.clearHistory()
+            viewModel.getSearchHistory()
         }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -179,14 +181,15 @@ class SearchActivity : AppCompatActivity() {
     private fun showContent() {
         progressBar.isVisible = false
         rvTrackList.isVisible = true
-       // searchResult.isVisible = false
-        //searchHistory.isVisible = false
+        //searchResult.isVisible = true
+       // searchHistory.isVisible = false
     }
     private fun showHistory() {
         progressBar.isVisible = false
         rvTrackList.isVisible = true
-      //  searchResult.isVisible = false
-        //searchHistory.isVisible = true
+        clearButtonHistory.isVisible = true
+        searchResult.isVisible = false
+        searchHistory.isVisible = true
     }
     private fun showNothingFound() {
         progressBar.isVisible = false

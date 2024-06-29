@@ -1,8 +1,10 @@
-package com.example.playlistmaker.player.domain.repositoty
+package com.example.playlistmaker.player.domain.api
 
-import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 
-interface PlayerRepository {
+import com.example.playlistmaker.player.ui.PlayerStateStatus
+
+
+interface PlayerInteractor {
     fun preparePlayer(url: String?)
     fun startPlayer()
     fun pausePlayer()

@@ -1,10 +1,11 @@
 package com.example.playlistmaker.player.data.repository
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.models.PlayerStateStatus
-import com.example.playlistmaker.player.domain.repositoty.PlayerRepository
+import com.example.playlistmaker.player.ui.PlayerStateStatus
+import com.example.playlistmaker.player.domain.repository.PlayerRepository
 
 class PlayerRepositoryImpl : PlayerRepository {
+
 
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerStateStatus.STATE_DEFAULT

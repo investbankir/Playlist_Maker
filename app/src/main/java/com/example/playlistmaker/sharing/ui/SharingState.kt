@@ -1,4 +1,4 @@
-package com.example.playlistmaker.sharing.presentation
+package com.example.playlistmaker.sharing.ui
 
 class SharingState(
     val shareText: String = "",

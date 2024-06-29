@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.presentation
+package com.example.playlistmaker.search.ui
 
 enum class SearchState {
     LOADING,
