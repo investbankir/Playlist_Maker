@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 
-
 class PlayerViewModel(
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val previewUrl: String?
 ) : ViewModel() {
     companion object {
         private const val WAITING_TIME = 400L
@@ -42,11 +42,11 @@ class PlayerViewModel(
                 handler.removeCallbacks(updatePositionRunnable)
             }
         }
+        preparePlayer()
     }
-    fun preparePlayer(url: String?) {
-        playerInteractor.preparePlayer(url)
+    private fun preparePlayer() {
+        playerInteractor.preparePlayer(previewUrl)
     }
-
     fun startPlayer() {
         playerInteractor.startPlayer()
         _currentPosition.value = playerInteractor.getCurrentPosition()
@@ -55,8 +55,8 @@ class PlayerViewModel(
     fun pausePlayer() {
         playerInteractor.pausePlayer()
     }
-
-    fun releasePlayer() {
+    override fun onCleared() {
         playerInteractor.releasePlayer()
+        super.onCleared()
     }
 }

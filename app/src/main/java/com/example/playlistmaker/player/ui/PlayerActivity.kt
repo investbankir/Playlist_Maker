@@ -28,8 +28,13 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
+        track = intent.getParcelableExtra(TRACK_DATA) ?:
+        throw IllegalArgumentException("Track data not found in Intent")
+        val previewUrl = track.previewUrl ?: throw IllegalArgumentException("Preview URL not found in Track data")
+
+
         playerViewModel = ViewModelProvider(this, PlayerViewModelFactory(
-                Creator.providePlayerInteractor()))[PlayerViewModel::class.java]
+                Creator.providePlayerInteractor(), previewUrl))[PlayerViewModel::class.java]
 
         playerViewModel.playerState.observe(this) { state ->
             updateUI(state)
@@ -38,21 +43,12 @@ class PlayerActivity : AppCompatActivity() {
             playbackProgress.text = dateFormat.format(position)
         }
 
-        track = intent.getParcelableExtra(TRACK_DATA)!!
-
         initializeUIComponents()
-
-        playerViewModel.preparePlayer(track.previewUrl)
-    }
+}
 
     override fun onPause() {
         super.onPause()
         playerViewModel.pausePlayer()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        playerViewModel.releasePlayer()
     }
 
     private fun initializeUIComponents() {

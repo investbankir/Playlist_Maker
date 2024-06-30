@@ -25,21 +25,22 @@ class SettingsActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, factory).get(SettingsViewModel::class.java)
 
         viewModel.settingsState.observe(this) { state ->
-            //themeSwitch.isChecked = state.isDarkThemeEnabled
             handleSettingsState(state)
         }
 
         setupUi()
     }
+    override fun onResume() {
+        super.onResume()
+        viewModel.synchronizeTheme()
+    }
 
     private fun handleSettingsState(state: SettingsState) {
-      //  val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
         themeSwitch.isChecked = state.isDarkThemeEnabled
     }
 
     private fun setupUi() {
 
-      //  val themeSwitch = findViewById<SwitchMaterial>(R.id.themeSwitch)
         themeSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setDarkTheme(isChecked)
         }

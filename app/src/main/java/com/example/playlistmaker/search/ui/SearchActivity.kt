@@ -148,6 +148,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchTracks() {
+        showLoading()
         val query = inputEditText.text.toString().trim()
         if (query.isNotEmpty()) {
             viewModel.searchTracks(query)
@@ -175,14 +176,11 @@ class SearchActivity : AppCompatActivity() {
     private fun showLoading() {
         progressBar.isVisible = true
         rvTrackList.isVisible = false
-        //searchResult.isVisible = false
-        //searchHistory.isVisible = false
+        clearButtonHistory.isVisible = false
     }
     private fun showContent() {
         progressBar.isVisible = false
         rvTrackList.isVisible = true
-        //searchResult.isVisible = true
-       // searchHistory.isVisible = false
     }
     private fun showHistory() {
         progressBar.isVisible = false

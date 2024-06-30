@@ -1,7 +1,7 @@
-package com.example.playlistmaker.sharing.domain.interactor
+package com.example.playlistmaker.sharing.domain.impl
 
 import android.content.Intent
-import android.net.Uri
+import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 //import com.example.playlistmaker.sharing.data.ResourcesProvider
 import com.example.playlistmaker.sharing.domain.api.SharingRepository
 

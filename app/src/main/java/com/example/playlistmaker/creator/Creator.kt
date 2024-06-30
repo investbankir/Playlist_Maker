@@ -13,21 +13,23 @@ import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import  com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.player.domain.repository.PlayerRepository
 import com.example.playlistmaker.player.data.repository.PlayerRepositoryImpl
-import com.example.playlistmaker.settings.domain.interactor.SettingsInteractorImpl
+import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
 import com.example.playlistmaker.settings.data.repository.SettingsRepositoryImpl
-import com.example.playlistmaker.settings.domain.interactor.SettingsInteractor
+import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import android.content.SharedPreferences
 import com.example.playlistmaker.sharing.domain.api.SharingRepository
 import com.example.playlistmaker.sharing.data.repository.SharingRepositoryImpl
-import com.example.playlistmaker.sharing.domain.interactor.SharingInteractor
-import com.example.playlistmaker.sharing.domain.interactor.SharingInteractorImpl
+import com.example.playlistmaker.sharing.domain.api.SharingInteractor
+import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
-    private lateinit var sharedPrefs : SharedPreferences
+    private lateinit var settingsRepository: SettingsRepository
+    private lateinit var settingsInteractor: SettingsInteractor
 
-    fun initialize(sharedPreferences: SharedPreferences) {
-        sharedPrefs = sharedPreferences
+    fun initialize(sharedPrefs: SharedPreferences) {
+        settingsRepository = SettingsRepositoryImpl(sharedPrefs)
+        settingsInteractor = SettingsInteractorImpl(settingsRepository)
     }
     private fun getTrackRepository() : TracksRepository{
         return TracksRepositoryImpl(RetrofitNetworkClient())
@@ -39,11 +41,6 @@ object Creator {
     private fun getPlayerRepository() : PlayerRepository{
         return PlayerRepositoryImpl()
     }
-
-    private fun getSettingsRepository() : SettingsRepository {
-        return SettingsRepositoryImpl(sharedPrefs)
-    }
-
     private fun getSharingRepository() : SharingRepository {
         return SharingRepositoryImpl()
     }
@@ -58,7 +55,10 @@ object Creator {
         return PlayerInteractorImpl(getPlayerRepository())
     }
     fun provideSettingsInteractor() : SettingsInteractor {
-        return SettingsInteractorImpl(getSettingsRepository())
+        if (!this::settingsInteractor.isInitialized) {
+            throw IllegalStateException("Creator is not initialized")
+        }
+        return settingsInteractor
     }
     fun provideSharingInteractor() : SharingInteractor {
         return SharingInteractorImpl(getSharingRepository())
