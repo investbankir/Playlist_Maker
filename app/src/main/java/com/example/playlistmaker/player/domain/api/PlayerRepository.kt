@@ -1,6 +1,6 @@
-package com.example.playlistmaker.player.domain.repository
+package com.example.playlistmaker.player.domain.api
 
-import com.example.playlistmaker.player.ui.PlayerStateStatus
+import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 
 interface PlayerRepository {
     fun preparePlayer(url: String?)

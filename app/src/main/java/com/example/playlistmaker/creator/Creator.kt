@@ -1,5 +1,6 @@
 package com.example.playlistmaker.creator
 
+import android.content.Context
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.data.network.TracksRepositoryImpl
 import com.example.playlistmaker.search.domain.api.HistoryRepository
@@ -11,7 +12,7 @@ import com.example.playlistmaker.search.domain.impl.SearchInteractorImpl
 import com.example.playlistmaker.search.domain.impl.HistoryInteractorImpl
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import  com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.player.domain.repository.PlayerRepository
+import com.example.playlistmaker.player.domain.api.PlayerRepository
 import com.example.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
@@ -22,6 +23,8 @@ import com.example.playlistmaker.sharing.domain.api.SharingRepository
 import com.example.playlistmaker.sharing.data.repository.SharingRepositoryImpl
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
+import com.example.playlistmaker.sharing.ui.ExternalNavigator
+
 
 object Creator {
     private lateinit var settingsRepository: SettingsRepository
@@ -38,7 +41,7 @@ object Creator {
     private fun getHistoryRepository() : HistoryRepository{
         return HistoryRepositoryImpl()
     }
-    private fun getPlayerRepository() : PlayerRepository{
+    private fun getPlayerRepository() : PlayerRepository {
         return PlayerRepositoryImpl()
     }
     private fun getSharingRepository() : SharingRepository {
@@ -62,5 +65,8 @@ object Creator {
     }
     fun provideSharingInteractor() : SharingInteractor {
         return SharingInteractorImpl(getSharingRepository())
+    }
+    fun provideExternalNavigator(context: Context): ExternalNavigator {
+        return ExternalNavigator(context)
     }
 }

@@ -131,6 +131,7 @@ class SearchActivity : AppCompatActivity() {
         clearButtonHistory.setOnClickListener {
             viewModel.clearHistory()
             viewModel.getSearchHistory()
+            clearButtonHistory.isVisible = false
         }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->

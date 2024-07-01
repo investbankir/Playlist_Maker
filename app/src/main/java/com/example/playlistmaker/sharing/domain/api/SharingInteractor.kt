@@ -1,10 +1,7 @@
 package com.example.playlistmaker.sharing.domain.api
 
-import android.content.Intent
-
-interface
-SharingInteractor {
-    fun getShareIntent(shareText: String): Intent
-    fun getSupportEmailIntent(email: String, subject: String, text: String): Intent
-    fun getUserAgreementIntent(agreementUrl: String): Intent
+interface SharingInteractor {
+    fun getShareData(shareText: String): ShareData
+    fun getSupportEmailData(email: String, subject: String, text: String): EmailData
+    fun getUserAgreementData(agreementUrl: String): UrlData
 }

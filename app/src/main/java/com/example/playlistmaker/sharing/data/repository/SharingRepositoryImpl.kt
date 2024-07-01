@@ -13,6 +13,7 @@ class SharingRepositoryImpl : SharingRepository {
         }
     }
 
+
     override fun getSupportEmailIntent(email: String, subject: String, text: String): Intent {
         return Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")

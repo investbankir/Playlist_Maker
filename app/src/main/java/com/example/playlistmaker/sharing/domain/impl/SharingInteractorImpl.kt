@@ -1,21 +1,19 @@
 package com.example.playlistmaker.sharing.domain.impl
 
-import android.content.Intent
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
-//import com.example.playlistmaker.sharing.data.ResourcesProvider
-import com.example.playlistmaker.sharing.domain.api.SharingRepository
+import com.example.playlistmaker.sharing.domain.api.*
 
 
 class SharingInteractorImpl(private val sharingRepository: SharingRepository) : SharingInteractor {
-    override fun getShareIntent(shareText: String): Intent {
-        return sharingRepository.getShareIntent(shareText)
+    override fun getShareData(shareText: String): ShareData {
+        return ShareData(shareText)
     }
 
-    override fun getSupportEmailIntent(email: String, subject: String, text: String): Intent {
-        return sharingRepository.getSupportEmailIntent(email, subject, text)
+    override fun getSupportEmailData(email: String, subject: String, text: String): EmailData {
+        return EmailData(email, subject, text)
     }
 
-    override fun getUserAgreementIntent(agreementUrl: String): Intent {
-        return sharingRepository.getUserAgreementIntent(agreementUrl)
+    override fun getUserAgreementData(agreementUrl: String): UrlData {
+        return UrlData(agreementUrl)
     }
 }

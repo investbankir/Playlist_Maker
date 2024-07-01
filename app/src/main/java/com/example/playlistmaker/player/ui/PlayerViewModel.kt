@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
+import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
