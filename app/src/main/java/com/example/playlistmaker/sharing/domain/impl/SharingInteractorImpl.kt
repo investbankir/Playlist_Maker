@@ -4,16 +4,16 @@ import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.api.*
 
 
-class SharingInteractorImpl(private val sharingRepository: SharingRepository) : SharingInteractor {
-    override fun getShareData(shareText: String): ShareData {
-        return ShareData(shareText)
+class SharingInteractorImpl(private val externalNavigator: ExternalNavigator) : SharingInteractor {
+    override fun shareText(shareText: String) {
+        externalNavigator.shareText(shareText)
     }
 
-    override fun getSupportEmailData(email: String, subject: String, text: String): EmailData {
-        return EmailData(email, subject, text)
+    override fun sendSupportEmail(email: String, subject: String, text: String) {
+        externalNavigator.sendSupportEmail(email, subject, text)
     }
 
-    override fun getUserAgreementData(agreementUrl: String): UrlData {
-        return UrlData(agreementUrl)
+    override fun openUserAgreement(agreementUrl: String) {
+        externalNavigator.openUserAgreement(agreementUrl)
     }
 }

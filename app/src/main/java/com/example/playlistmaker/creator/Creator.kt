@@ -1,5 +1,6 @@
 package com.example.playlistmaker.creator
 
+import android.app.Application
 import android.content.Context
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.data.network.TracksRepositoryImpl
@@ -23,13 +24,27 @@ import com.example.playlistmaker.sharing.domain.api.SharingRepository
 import com.example.playlistmaker.sharing.data.repository.SharingRepositoryImpl
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
-import com.example.playlistmaker.sharing.ui.ExternalNavigator
+import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.domain.api.ExternalNavigator
+
 
 
 object Creator {
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var settingsInteractor: SettingsInteractor
+    private lateinit var application: Application
 
+    fun initApplication(application: Application) {
+        this.application = application
+    }
+
+    private fun provideExternalNavigator(context: Context): ExternalNavigator {
+        return ExternalNavigatorImpl(context)
+    }
+
+    fun provideSharingInteractor(): SharingInteractor {
+        return SharingInteractorImpl(provideExternalNavigator(application))
+    }
     fun initialize(sharedPrefs: SharedPreferences) {
         settingsRepository = SettingsRepositoryImpl(sharedPrefs)
         settingsInteractor = SettingsInteractorImpl(settingsRepository)
@@ -62,11 +77,5 @@ object Creator {
             throw IllegalStateException("Creator is not initialized")
         }
         return settingsInteractor
-    }
-    fun provideSharingInteractor() : SharingInteractor {
-        return SharingInteractorImpl(getSharingRepository())
-    }
-    fun provideExternalNavigator(context: Context): ExternalNavigator {
-        return ExternalNavigator(context)
     }
 }

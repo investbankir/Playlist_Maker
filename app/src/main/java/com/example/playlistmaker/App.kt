@@ -12,11 +12,13 @@ class App : Application() {
         const val KEY_SWITCHER_THEME = "KEY_SWITCHER_THEME"
         lateinit var sharedPrefs : SharedPreferences
     }
+
     override fun onCreate() {
         super.onCreate()
         sharedPrefs = getSharedPreferences(LOG_SWITCHER, MODE_PRIVATE)
         val isDarkThemeFromPrefs = sharedPrefs.getBoolean(KEY_SWITCHER_THEME, false)
 
+        Creator.initApplication(this)
         Creator.initialize(sharedPrefs)
 
         applySavedTheme()

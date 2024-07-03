@@ -8,9 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
-import com.example.playlistmaker.sharing.domain.api.EmailData
-import com.example.playlistmaker.sharing.domain.api.ShareData
-import com.example.playlistmaker.sharing.domain.api.UrlData
 
 
 class SettingsViewModel(
@@ -44,15 +41,15 @@ class SettingsViewModel(
         )
     }
 
-    fun getShareData(shareText: String): ShareData {
-        return sharingInteractor.getShareData(shareText)
+    fun shareApp(shareText: String) {
+        sharingInteractor.shareText(shareText)
     }
 
-    fun getSupportEmailData(email: String, subject: String, text: String): EmailData {
-        return sharingInteractor.getSupportEmailData(email, subject, text)
+    fun contactSupport(email: String, subject: String, text: String) {
+        sharingInteractor.sendSupportEmail(email, subject, text)
     }
 
-    fun getUserAgreementData(url: String): UrlData {
-        return sharingInteractor.getUserAgreementData(url)
+    fun openUserAgreement(url: String) {
+        sharingInteractor.openUserAgreement(url)
     }
 }
