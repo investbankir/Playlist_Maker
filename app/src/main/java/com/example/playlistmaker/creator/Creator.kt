@@ -20,8 +20,6 @@ import com.example.playlistmaker.settings.domain.api.SettingsRepository
 import com.example.playlistmaker.settings.data.repository.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import android.content.SharedPreferences
-import com.example.playlistmaker.sharing.domain.api.SharingRepository
-import com.example.playlistmaker.sharing.data.repository.SharingRepositoryImpl
 import com.example.playlistmaker.sharing.domain.api.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
@@ -59,13 +57,9 @@ object Creator {
     private fun getPlayerRepository() : PlayerRepository {
         return PlayerRepositoryImpl()
     }
-    private fun getSharingRepository() : SharingRepository {
-        return SharingRepositoryImpl()
-    }
     fun provideSearchInteractor(): SearchInteractor {
         return SearchInteractorImpl(getTrackRepository())
     }
-
     fun provideHistoryInteractor(): HistoryInteractor {
         return HistoryInteractorImpl(getHistoryRepository())
     }

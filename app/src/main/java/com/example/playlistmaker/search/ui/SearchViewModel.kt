@@ -7,6 +7,7 @@ import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchState
+import com.example.playlistmaker.search.ui.SearchState.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -26,7 +27,7 @@ class SearchViewModel(
     private val executor: Executor = Executors.newSingleThreadExecutor()
 
     fun searchTracks(query: String) {
-        _state.value = SearchState.LOADING
+        _state.value = LOADING
 
         executor.execute {
             searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
@@ -34,12 +35,12 @@ class SearchViewModel(
                     if (foundTracks != null) {
                         _tracks.postValue(foundTracks)
                         _state.postValue(if (foundTracks.isEmpty()) {
-                            SearchState.NOTHING_FOUND
+                            NOTHING_FOUND
                         } else {
-                            SearchState.CONTENT
+                            CONTENT
                         })
                     } else {
-                        _state.postValue(SearchState.COMMUNICATION_PROBLEMS)
+                        _state.postValue(COMMUNICATION_PROBLEMS)
                     }
                 }
             })
@@ -47,8 +48,13 @@ class SearchViewModel(
     }
 
     fun getSearchHistory() {
-        _tracks.value = historyInteractor.getSearchHistory()
-        _state.value = SearchState.HISTORY
+        val history = historyInteractor.getSearchHistory()
+        _tracks.value = history
+        if (history.isEmpty()) {
+            _state.value = HISTORY_EMPTY
+        } else {
+            _state.value = HISTORY
+        }
     }
 
     fun clearHistory() {
@@ -68,12 +74,12 @@ class SearchViewModel(
                     if (foundTracks != null) {
                         _tracks.postValue(foundTracks)
                         _state.postValue(if (foundTracks.isEmpty()) {
-                            SearchState.NOTHING_FOUND
+                            NOTHING_FOUND
                         } else {
-                            SearchState.CONTENT
+                            CONTENT
                         })
                     } else {
-                        _state.postValue(SearchState.COMMUNICATION_PROBLEMS)
+                        _state.postValue(COMMUNICATION_PROBLEMS)
                     }
                 }
             })

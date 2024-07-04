@@ -1,7 +1,5 @@
 package com.example.playlistmaker.settings.ui
 
-
-import android.content.Intent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

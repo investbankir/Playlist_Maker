@@ -5,5 +5,6 @@ enum class SearchState {
     NOTHING_FOUND,
     COMMUNICATION_PROBLEMS,
     HISTORY,
+    HISTORY_EMPTY,
     CONTENT
 }

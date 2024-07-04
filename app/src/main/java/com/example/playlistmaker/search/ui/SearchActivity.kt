@@ -67,6 +67,7 @@ class SearchActivity : AppCompatActivity() {
                 SearchState.LOADING -> showLoading()
                 SearchState.CONTENT -> showContent()
                 SearchState.HISTORY -> showHistory()
+                SearchState.HISTORY_EMPTY -> showEmptyHistory()
                 SearchState.NOTHING_FOUND -> showNothingFound()
                 SearchState.COMMUNICATION_PROBLEMS -> showCommunicationProblems()
             }
@@ -130,8 +131,6 @@ class SearchActivity : AppCompatActivity() {
 
         clearButtonHistory.setOnClickListener {
             viewModel.clearHistory()
-            viewModel.getSearchHistory()
-            clearButtonHistory.isVisible = false
         }
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -187,6 +186,14 @@ class SearchActivity : AppCompatActivity() {
         progressBar.isVisible = false
         rvTrackList.isVisible = true
         clearButtonHistory.isVisible = true
+        searchResult.isVisible = false
+        searchHistory.isVisible = true
+    }
+
+    private fun showEmptyHistory() {
+        progressBar.isVisible = false
+        rvTrackList.isVisible = true
+        clearButtonHistory.isVisible = false
         searchResult.isVisible = false
         searchHistory.isVisible = true
     }
