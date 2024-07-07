@@ -6,19 +6,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.TRACK_DATA
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 import com.example.playlistmaker.search.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
-    private lateinit var playerViewModel: PlayerViewModel
+    private val playerViewModel: PlayerViewModel by viewModel { parametersOf(track.previewUrl)  }
     private lateinit var track: Track
     private lateinit var playbackProgress: TextView
     private lateinit var playButton: ImageButton
@@ -31,20 +31,9 @@ class PlayerActivity : AppCompatActivity() {
 
         track = intent.getParcelableExtra(TRACK_DATA) ?:
         throw IllegalArgumentException("Track data not found in Intent")
-        val previewUrl = track.previewUrl ?: throw IllegalArgumentException("Preview URL not found in Track data")
-
-
-        playerViewModel = ViewModelProvider(this, PlayerViewModelFactory(
-                Creator.providePlayerInteractor(), previewUrl))[PlayerViewModel::class.java]
-
-        playerViewModel.playerState.observe(this) { state ->
-            updateUI(state)
-        }
-        playerViewModel.currentPosition.observe(this) { position ->
-            playbackProgress.text = dateFormat.format(position)
-        }
 
         initializeUIComponents()
+        observeViewModel()
 }
 
     override fun onPause() {
@@ -99,6 +88,14 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeViewModel() {
+        playerViewModel.playerState.observe(this) { state ->
+            updateUI(state)
+        }
+        playerViewModel.currentPosition.observe(this) { position ->
+            playbackProgress.text = dateFormat.format(position)
+        }
+    }
 
     private fun updateUI(state: PlayerStateStatus) {
         when (state) {

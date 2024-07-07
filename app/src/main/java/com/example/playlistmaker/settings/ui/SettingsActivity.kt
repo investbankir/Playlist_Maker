@@ -2,13 +2,13 @@ package com.example.playlistmaker.settings.ui
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.google.android.material.switchmaterial.SwitchMaterial
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel by viewModel<SettingsViewModel>()
     private lateinit var themeSwitch: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,13 +16,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         themeSwitch = findViewById(R.id.themeSwitch)
-
-        val factory = SettingsViewModelFactory(
-            Creator.provideSettingsInteractor(),
-            Creator.provideSharingInteractor()
-        )
-
-        viewModel = ViewModelProvider(this, factory).get(SettingsViewModel::class.java)
 
         viewModel.settingsState.observe(this) { state ->
             handleSettingsState(state)
