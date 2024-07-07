@@ -10,9 +10,9 @@ import com.example.playlistmaker.player.ui.PlayerViewModel
 
 val playerModule = module {
 
-    single<PlayerRepository> { PlayerRepositoryImpl() }
+    factory <PlayerRepository> { PlayerRepositoryImpl() }
 
-    single<PlayerInteractor> { PlayerInteractorImpl(get()) }
+    factory<PlayerInteractor> { PlayerInteractorImpl(get()) }
 
     viewModel{ (previewUrl: String?) -> PlayerViewModel(get(), previewUrl) }
     }
