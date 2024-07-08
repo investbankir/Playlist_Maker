@@ -10,5 +10,5 @@ import org.koin.android.ext.koin.androidContext
 val sharingModule = module {
     single<ExternalNavigator> { ExternalNavigatorImpl(androidContext()) }
 
-    single<SharingInteractor> { SharingInteractorImpl(get()) }
+    factory<SharingInteractor> { SharingInteractorImpl(get()) }
 }

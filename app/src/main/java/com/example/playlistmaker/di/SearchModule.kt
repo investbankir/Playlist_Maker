@@ -13,18 +13,20 @@ import com.example.playlistmaker.search.domain.impl.HistoryInteractorImpl
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.search.data.NetworkClient
+import com.google.gson.Gson
 
 val searchModule = module {
 
+    single { Gson() }
     single<NetworkClient>{RetrofitNetworkClient() }
 
     single<TracksRepository> { TracksRepositoryImpl(get()) }
 
-    single<HistoryRepository> { HistoryRepositoryImpl() }
+    single<HistoryRepository> { HistoryRepositoryImpl(get(), get()) }
 
-    single<SearchInteractor> { SearchInteractorImpl(get()) }
+    factory<SearchInteractor> { SearchInteractorImpl(get()) }
 
-    single<HistoryInteractor> { HistoryInteractorImpl(get()) }
+    factory<HistoryInteractor> { HistoryInteractorImpl(get()) }
 
     viewModel { SearchViewModel(get(), get()) }
 
