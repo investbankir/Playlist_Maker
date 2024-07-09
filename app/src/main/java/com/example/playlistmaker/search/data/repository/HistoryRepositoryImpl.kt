@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.data.repository
 
+import android.content.SharedPreferences
 import com.example.playlistmaker.search.domain.api.HistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.App
@@ -7,23 +8,26 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class HistoryRepositoryImpl : HistoryRepository {
+class HistoryRepositoryImpl(
+    private val gson: Gson,
+    private val sharedPrefs : SharedPreferences
+    ) : HistoryRepository {
     companion object {
         const val KEY_SEARCH_HISTORY = "key_search_history"
         const val MAX_HISTORY_SIZE = 10
     }
     override fun write(searchHistoryTrack: List<Track>) {
-        val json = Gson().toJson(searchHistoryTrack)
-        App.sharedPrefs.edit()
+        val json = gson.toJson(searchHistoryTrack)
+        sharedPrefs.edit()
             .putString(KEY_SEARCH_HISTORY, json)
             .apply()
     }
 
     override fun read(): List<Track> {
-        val json = App.sharedPrefs.getString(KEY_SEARCH_HISTORY, null)
+        val json = sharedPrefs.getString(KEY_SEARCH_HISTORY, null)
         return if (!json.isNullOrEmpty()) {
             val typeToken = object : TypeToken<List<Track>>() {}.type
-            Gson().fromJson(json, typeToken)
+            gson.fromJson(json, typeToken)
         } else {
             emptyList()
         }

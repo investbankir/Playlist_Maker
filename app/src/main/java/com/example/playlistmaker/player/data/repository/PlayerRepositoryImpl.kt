@@ -4,14 +4,15 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 
-class PlayerRepositoryImpl : PlayerRepository {
+class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerRepository {
 
 
-    private val mediaPlayer = MediaPlayer()
+   // private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerStateStatus.STATE_DEFAULT
     private var audioPlayerListener : ((PlayerStateStatus) -> Unit)? = null
 
     override fun preparePlayer(url: String?){
+        mediaPlayer.reset()
         mediaPlayer.apply {
             setDataSource(url)
             prepareAsync()

@@ -17,17 +17,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.creator.Creator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
     companion object {
-        private const val LOG_TAG = "SeachActivity"
         private const val EDIT_TEXT_KEY = "EDIT_TEXT_KEY"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
@@ -54,13 +52,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        val factory = SearchViewModelFactory(
-            Creator.provideSearchInteractor(),
-            Creator.provideHistoryInteractor()
-        )
-
-            viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
 
         viewModel.state.observe(this, Observer { state ->
             when (state) {
