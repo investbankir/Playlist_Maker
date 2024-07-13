@@ -3,7 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".media_library.ui.Media_libraryActivity">
+    tools:context=".media_library.ui.MediaLibraryActivity">
+
+    <LinearLayout
+        android:id="@+id/TopTitleML"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <Button
+            android:id="@+id/backButtonML"
+            style="@style/SettingsBackButton" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="center_vertical"
+            style="@style/MediumTextStyle"
+            android:text="@string/medialibrary"
+            android:textSize="@dimen/primary_text"
+            tools:ignore="MissingConstraints" />
+    </LinearLayout>
+    
+    <com.google.android.material.tabs.TabLayout
+        style="@style/MLTableoutStyle"
+        android:id="@+id/MLTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toBottomOf="@id/TopTitleML"
+        app:tabMode="fixed"
+        app:tabRippleColor="?attr/colorOnPrimary"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerML"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

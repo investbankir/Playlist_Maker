@@ -9,6 +9,7 @@ import com.example.playlistmaker.di.playerModule
 import com.example.playlistmaker.di.searchModule
 import com.example.playlistmaker.di.settingsModule
 import com.example.playlistmaker.di.sharingModule
+import com.example.playlistmaker.di.mediaLibraryModule
 
 
 class App : Application() {
@@ -22,7 +23,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(listOf(playerModule, searchModule,settingsModule, sharingModule))
+            modules(listOf(playerModule, searchModule,settingsModule, sharingModule, mediaLibraryModule))
         }
         sharedPrefs = getSharedPreferences(LOG_SWITCHER, MODE_PRIVATE)
         val isDarkThemeFromPrefs = sharedPrefs.getBoolean(KEY_SWITCHER_THEME, false)

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.ui.SearchState
 import com.example.playlistmaker.search.ui.SearchState.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
