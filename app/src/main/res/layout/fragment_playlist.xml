@@ -10,7 +10,7 @@
         android:id="@+id/new_playList_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="@dimen/dimen24"
         style="@style/MediumTextStyle"
         android:textColor="?attr/colorOnPrimary"
         android:backgroundTint="?attr/colorOnSecondary"
@@ -27,9 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_nothing_was_found"
-        android:layout_marginTop="210dp"
+        android:layout_marginTop="46dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/new_playList_button"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
