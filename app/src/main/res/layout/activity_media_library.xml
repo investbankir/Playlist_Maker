@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/TopTitleML"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="@dimen/dimen56">
 
         <Button
             android:id="@+id/backButtonML"
