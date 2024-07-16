@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorOnPrimary">
+    android:background="?attr/colorOnPrimary"
+    tools:context="com.example.playlistmaker.settings.ui.SettingsFragment">
 
-    <LinearLayout
+
+<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen56"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical">
-
-        <Button
-            android:id="@+id/backMainActivity"
-            style="@style/SettingsBackButton" />
 
         <TextView
             android:layout_width="match_parent"

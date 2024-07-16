@@ -4,15 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     style="@style/Seach_Actity"
-    tools:context=".search.ui.SearchActivity">
+    tools:context="com.example.playlistmaker.search.ui.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen56">
-
-        <Button
-            android:id="@+id/backMainActivity"
-            style="@style/SettingsBackButton" />
 
         <TextView
         android:layout_width="match_parent"
