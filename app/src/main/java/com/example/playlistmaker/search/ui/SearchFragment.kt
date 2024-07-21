@@ -72,7 +72,11 @@ class SearchFragment: Fragment() {
         savedValue = savedInstanceState?.getString(EDIT_TEXT_KEY)
         binding.inputEditText.setText(savedValue)
 
-        viewModel.getSearchHistory()
+        if (binding.inputEditText.text.isNullOrEmpty()){
+            viewModel.getSearchHistory()
+        } else {
+            searchTracks()
+        }
     }
     private fun setupUI() {
         binding.rvTrackList.adapter = trackAdapter
@@ -83,6 +87,7 @@ class SearchFragment: Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 savedValue = s.toString()
                 binding.clearButton.isVisible = clearButtonVisibility(s)
+                binding.clearButtonHistory.isVisible = false
                 searchDebounce()
             }
 
@@ -149,11 +154,15 @@ class SearchFragment: Fragment() {
         binding.rvTrackList.isVisible = true
     }
     private fun showHistory() {
-        binding.progressBar.isVisible = false
-        binding.rvTrackList.isVisible = true
-        binding.clearButtonHistory.isVisible = true
-        binding.SearchResult.isVisible = false
-        binding.searchHistory.isVisible = true
+        if(binding.inputEditText.text.isNullOrEmpty()) {
+            binding.progressBar.isVisible = false
+            binding.rvTrackList.isVisible = true
+            binding.clearButtonHistory.isVisible = true
+            binding.SearchResult.isVisible = false
+            binding.searchHistory.isVisible = true
+        }else {
+            viewModel.searchTracks(binding.inputEditText.text.toString().trim())
+        }
     }
 
     private fun showEmptyHistory() {
