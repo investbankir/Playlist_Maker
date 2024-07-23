@@ -4,15 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     style="@style/Seach_Actity"
-    tools:context=".search.ui.SearchActivity">
+    tools:context="com.example.playlistmaker.search.ui.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen56">
-
-        <Button
-            android:id="@+id/backMainActivity"
-            style="@style/SettingsBackButton" />
 
         <TextView
         android:layout_width="match_parent"
@@ -96,7 +92,7 @@
     <LinearLayout
         android:id="@+id/searchHistory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="24dp"
         android:orientation="vertical">
 
@@ -108,7 +104,7 @@
             android:progress="75"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/marginTopProgressBar"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/titleSearchHistory"

@@ -27,7 +27,6 @@ class SearchViewModel(
 
     fun searchTracks(query: String) {
         _state.value = LOADING
-
         executor.execute {
             searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
@@ -67,6 +66,7 @@ class SearchViewModel(
     }
 
     fun searchDebounced(query: String) {
+        _state.value = LOADING
         executor.execute {
             searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
