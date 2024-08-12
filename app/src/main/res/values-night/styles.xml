@@ -80,13 +80,14 @@
         <item name="android:layout_height">36dp</item>
         <item name="android:hint">@string/search_hint</item>
         <item name="android:textColor">@color/blackNight</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColorHint">@color/blackNight</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:inputType">text</item>
         <item name="android:maxLength">20</item>
         <item name="android:maxLines">1</item>
         <item name="android:background">@drawable/ic_background_search</item>
-        <item name="android:drawableStart">@drawable/ic_search</item>
+        <item name="android:drawableStart">@drawable/ic_search_et</item>
         <item name="android:drawableTint">@color/blackNight</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:paddingLeft">12dp</item>
