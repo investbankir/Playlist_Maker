@@ -71,9 +71,10 @@ class SearchFragment: Fragment() {
         })
 
             trackAdapter = TrackListAdapter(requireContext(), trackList) { track ->
-                if (clickDebounce())
-                clickToTrack(track)
-        }
+                if (clickDebounce()) {
+                    clickToTrack(track)
+                }
+            }
 
         setupUI()
 
