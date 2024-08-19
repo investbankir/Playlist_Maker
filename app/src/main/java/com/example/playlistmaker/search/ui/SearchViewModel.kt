@@ -9,7 +9,8 @@ import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchState.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -19,16 +20,23 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor
 ) : ViewModel() {
 
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
     private val _state = MutableLiveData<SearchState>()
     val state: LiveData<SearchState> get() = _state
 
     private val _tracks = MutableLiveData<List<Track>>()
     val tracks: LiveData<List<Track>> get() = _tracks
 
+    private var latestSearchText: String? = null
+    private var searchJob: Job? = null
+
     fun searchTracks(query: String) {
         _state.value = LOADING
-        viewModelScope.launch(Dispatchers.IO) {
-            searchInteractor.searchTracks(query).collect() { result ->
+        viewModelScope.launch {
+            searchInteractor.searchTracks(query).collect { result ->
                 when (result) {
                     is Resource.Success -> {
                         val foundTracks = result.data ?: emptyList()
@@ -58,8 +66,19 @@ class SearchViewModel(
         historyInteractor.addTrackToHistory(track)
         getSearchHistory()
     }
+    fun searchDebounce(changedText: String) {
+        if (latestSearchText == changedText) {
+            return
+        }
 
-  // fun searchDebounced(query: String) {
-        //searchTracks(query)
-    //}
+        latestSearchText = changedText
+
+        searchJob?.cancel()
+        if (changedText.isNotEmpty()) {
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchTracks(changedText)
+            }
+        }
+    }
 }

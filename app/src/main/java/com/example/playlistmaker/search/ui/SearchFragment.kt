@@ -19,7 +19,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
@@ -28,7 +27,6 @@ import kotlinx.coroutines.launch
 class SearchFragment: Fragment() {
     companion object {
         private const val EDIT_TEXT_KEY = "EDIT_TEXT_KEY"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
@@ -37,8 +35,6 @@ class SearchFragment: Fragment() {
     private var isClickAllowed = true
 
     private var savedValue: String? = null
-    private var latestSearchText: String? = null
-    private var searchJob: Job? = null
     private val trackList = ArrayList<Track>()
     private lateinit var trackAdapter: TrackListAdapter
 
@@ -97,7 +93,7 @@ class SearchFragment: Fragment() {
                 savedValue = s.toString()
                 binding.clearButton.isVisible = clearButtonVisibility(s)
                 binding.clearButtonHistory.isVisible = false
-                searchDebounce(s.toString())
+                viewModel.searchDebounce(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -145,22 +141,6 @@ class SearchFragment: Fragment() {
             }
         }
         return current
-    }
-
-    private fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
-            return
-        }
-
-        latestSearchText == changedText
-
-        searchJob?.cancel()
-        if (changedText.isNotEmpty()) {
-            searchJob = lifecycleScope.launch {
-                delay(SEARCH_DEBOUNCE_DELAY)
-                searchTracks()
-            }
-        }
     }
 
     private fun clickToTrack(track: Track) {

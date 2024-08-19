@@ -6,14 +6,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.TRACK_DATA
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,9 +38,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        lifecycleScope.launch {
             playerViewModel.pausePlayer()
-        }
     }
 
     private fun initializeUIComponents() {
