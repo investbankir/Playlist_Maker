@@ -12,6 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.example.playlistmaker"
         minSdk = 29
+        //noinspection EditedTargetSdkVersion
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -41,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")

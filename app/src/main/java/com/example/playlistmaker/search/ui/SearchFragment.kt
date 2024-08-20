@@ -3,8 +3,6 @@ package com.example.playlistmaker.search.ui
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -16,25 +14,30 @@ import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlinx.coroutines.launch
+
 
 class SearchFragment: Fragment() {
     companion object {
         private const val EDIT_TEXT_KEY = "EDIT_TEXT_KEY"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private lateinit var binding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
+    private var isClickAllowed = true
 
     private var savedValue: String? = null
-    private val handler = Handler(Looper.getMainLooper())
     private val trackList = ArrayList<Track>()
     private lateinit var trackAdapter: TrackListAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,8 +67,10 @@ class SearchFragment: Fragment() {
         })
 
             trackAdapter = TrackListAdapter(requireContext(), trackList) { track ->
-            clickToTrack(track)
-        }
+                if (clickDebounce()) {
+                    clickToTrack(track)
+                }
+            }
 
         setupUI()
 
@@ -88,7 +93,7 @@ class SearchFragment: Fragment() {
                 savedValue = s.toString()
                 binding.clearButton.isVisible = clearButtonVisibility(s)
                 binding.clearButtonHistory.isVisible = false
-                searchDebounce()
+                viewModel.searchDebounce(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -117,7 +122,6 @@ class SearchFragment: Fragment() {
     private fun clearButtonVisibility(s: CharSequence?): Boolean {
         return !s.isNullOrEmpty()
     }
-
     private fun searchTracks() {
         showLoading()
         val query = binding.inputEditText.text.toString().trim()
@@ -127,17 +131,18 @@ class SearchFragment: Fragment() {
         }
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    private fun clickDebounce() : Boolean{
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
     }
 
-    private val searchRunnable = Runnable {
-        val query = binding.inputEditText.text.toString().trim()
-        if (query.isNotEmpty()) {
-            viewModel.searchDebounced(query)
-        }
-    }
     private fun clickToTrack(track: Track) {
         viewModel.addTrackHistory(track)
         val playerIntent = Intent(requireContext(), PlayerActivity::class.java)

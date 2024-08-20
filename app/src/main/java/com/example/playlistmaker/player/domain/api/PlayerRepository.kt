@@ -1,12 +1,13 @@
 package com.example.playlistmaker.player.domain.api
 
+import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 
 interface PlayerRepository {
-    fun preparePlayer(url: String?)
-    fun startPlayer()
-    fun pausePlayer()
-    fun releasePlayer()
-    fun getCurrentPosition(): Int
+    suspend fun preparePlayer(url: String?): MediaPlayer
+    suspend fun startPlayer(): Unit?
+    suspend fun pausePlayer(): Unit?
+    suspend fun releasePlayer()
+    suspend fun getCurrentPosition(): Int
     fun setOnChangePlayerListener(listener: (PlayerStateStatus) -> Unit)
 }

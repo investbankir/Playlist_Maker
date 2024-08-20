@@ -3,51 +3,57 @@ package com.example.playlistmaker.player.data.repository
 import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 import com.example.playlistmaker.player.domain.api.PlayerRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerRepository {
 
+    private var playerState: PlayerStateStatus = PlayerStateStatus.STATE_DEFAULT()
+    private var audioPlayerListener: ((PlayerStateStatus) -> Unit)? = null
 
-   // private val mediaPlayer = MediaPlayer()
-    private var playerState = PlayerStateStatus.STATE_DEFAULT
-    private var audioPlayerListener : ((PlayerStateStatus) -> Unit)? = null
-
-    override fun preparePlayer(url: String?){
+    override suspend fun preparePlayer(url: String?) = withContext(Dispatchers.IO) {
         mediaPlayer.reset()
         mediaPlayer.apply {
             setDataSource(url)
-            prepareAsync()
             setOnPreparedListener {
-                playerState = PlayerStateStatus.STATE_PREPARED
-                audioPlayerListener?.invoke(PlayerStateStatus.STATE_PREPARED)
+                playerState = PlayerStateStatus.STATE_PREPARED()
+                audioPlayerListener?.invoke(playerState)
             }
             setOnCompletionListener {
-                playerState = PlayerStateStatus.STATE_PREPARED
-                audioPlayerListener?.invoke(PlayerStateStatus.STATE_PREPARED)
+                playerState = PlayerStateStatus.STATE_PREPARED()
+                audioPlayerListener?.invoke(playerState)
             }
+            prepareAsync()
         }
     }
-    override fun startPlayer() {
+    override suspend fun startPlayer() = withContext(Dispatchers.IO) {
         mediaPlayer.start()
-        playerState = PlayerStateStatus.STATE_PLAYING
-        audioPlayerListener?.invoke(PlayerStateStatus.STATE_PLAYING)
+        playerState = PlayerStateStatus.STATE_PLAYING(mediaPlayer.currentPosition.toTimeString())
+        audioPlayerListener?.invoke(playerState)
     }
 
-    override fun pausePlayer() {
+    override suspend fun pausePlayer() = withContext(Dispatchers.IO) {
         mediaPlayer.pause()
-        playerState = PlayerStateStatus.STATE_PAUSED
-        audioPlayerListener?.invoke(PlayerStateStatus.STATE_PAUSED)
+        playerState = PlayerStateStatus.STATE_PAUSED(mediaPlayer.currentPosition.toTimeString())
+        audioPlayerListener?.invoke(playerState)
     }
 
-    override fun releasePlayer() {
+    override suspend fun releasePlayer() = withContext(Dispatchers.IO) {
         mediaPlayer.release()
-        playerState = PlayerStateStatus.STATE_DEFAULT
+        playerState = PlayerStateStatus.STATE_DEFAULT()
     }
 
-    override fun getCurrentPosition(): Int {
-        return mediaPlayer.currentPosition
+    override suspend fun getCurrentPosition(): Int = withContext(Dispatchers.IO)   {
+        mediaPlayer.currentPosition
     }
 
     override fun setOnChangePlayerListener(listener: (PlayerStateStatus) -> Unit) {
         audioPlayerListener = listener
+    }
+
+    fun Int.toTimeString(): String {
+        val minutes = (this / 1000) / 60
+        val seconds = (this / 1000) % 60
+        return String.format("%02d:%02d", minutes, seconds)
     }
 }

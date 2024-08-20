@@ -1,22 +1,24 @@
 package com.example.playlistmaker.player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val previewUrl: String?
 ) : ViewModel() {
     companion object {
-        private const val WAITING_TIME = 400L
+        private const val WAITING_TIME = 300L
     }
     private val _playerState = MutableLiveData<PlayerStateStatus>().apply {
-        value = PlayerStateStatus.STATE_DEFAULT
+        value = PlayerStateStatus.STATE_DEFAULT()
     }
     val playerState : LiveData<PlayerStateStatus> get() = _playerState
 
@@ -25,39 +27,58 @@ class PlayerViewModel(
     }
     val currentPosition : LiveData<Int> get() = _currentPosition
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val updatePositionRunnable = object : Runnable {
-        override fun run() {
-            if (_playerState.value == PlayerStateStatus.STATE_PLAYING) {
-                _currentPosition.postValue(playerInteractor.getCurrentPosition())
-                handler.postDelayed(this, WAITING_TIME)
-            }
-        }
-    }
+    private var updatePositionJob: Job? = null
+
     init {
         playerInteractor.setOnChangePlayerListener { state ->
-            _playerState.value = state
-            if (state == PlayerStateStatus.STATE_PLAYING) {
-                handler.post(updatePositionRunnable)
-            } else {
-                handler.removeCallbacks(updatePositionRunnable)
+            _playerState.postValue(state)
+            when (state) {
+                is PlayerStateStatus.STATE_PLAYING -> startUpdatingPosition()
+                is PlayerStateStatus.STATE_PREPARED -> {
+                    stopUpdatingPosition()
+                    _currentPosition.postValue(0)
+                }
+                else -> stopUpdatingPosition()
             }
         }
         preparePlayer()
     }
+
     private fun preparePlayer() {
-        playerInteractor.preparePlayer(previewUrl)
+        viewModelScope.launch {
+            playerInteractor.preparePlayer(previewUrl)
+        }
     }
     fun startPlayer() {
-        playerInteractor.startPlayer()
-        _currentPosition.value = playerInteractor.getCurrentPosition()
+        viewModelScope.launch {
+            playerInteractor.startPlayer()
+            _currentPosition.postValue(playerInteractor.getCurrentPosition())
+        }
     }
 
     fun pausePlayer() {
-        playerInteractor.pausePlayer()
+        viewModelScope.launch {
+            playerInteractor.pausePlayer()
+        }
+    }
+
+    private fun startUpdatingPosition() {
+        updatePositionJob?.cancel()
+        updatePositionJob = viewModelScope.launch {
+            while (_playerState.value is PlayerStateStatus.STATE_PLAYING) {
+                _currentPosition.postValue(playerInteractor.getCurrentPosition())
+                delay(WAITING_TIME)
+            }
+        }
+    }
+
+    private fun stopUpdatingPosition() {
+        updatePositionJob?.cancel()
     }
     override fun onCleared() {
-        playerInteractor.releasePlayer()
+        viewModelScope.launch {
+            playerInteractor.releasePlayer()
+        }
         super.onCleared()
     }
 }

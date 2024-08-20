@@ -38,7 +38,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        playerViewModel.pausePlayer()
+            playerViewModel.pausePlayer()
     }
 
     private fun initializeUIComponents() {
@@ -99,16 +99,16 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateUI(state: PlayerStateStatus) {
         when (state) {
-            PlayerStateStatus.STATE_PLAYING -> playButton.setImageResource(R.drawable.ic_pausebutton)
-            PlayerStateStatus.STATE_PAUSED, PlayerStateStatus.STATE_PREPARED -> playButton.setImageResource(R.drawable.ic_playbutton)
+            is PlayerStateStatus.STATE_PLAYING -> playButton.setImageResource(R.drawable.ic_pausebutton)
+            is PlayerStateStatus.STATE_PAUSED, is PlayerStateStatus.STATE_PREPARED -> playButton.setImageResource(R.drawable.ic_playbutton)
             else -> {}
         }
     }
 
     private fun playbackControl() {
         when (playerViewModel.playerState.value) {
-            PlayerStateStatus.STATE_PLAYING -> playerViewModel.pausePlayer()
-            PlayerStateStatus.STATE_PREPARED, PlayerStateStatus.STATE_PAUSED -> playerViewModel.startPlayer()
+            is PlayerStateStatus.STATE_PLAYING -> playerViewModel.pausePlayer()
+            is PlayerStateStatus.STATE_PREPARED, is PlayerStateStatus.STATE_PAUSED -> playerViewModel.startPlayer()
             else -> {}
         }
     }

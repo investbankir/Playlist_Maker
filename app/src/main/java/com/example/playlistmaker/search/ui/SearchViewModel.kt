@@ -3,12 +3,15 @@ package com.example.playlistmaker.search.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.util.Resource
 import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchState.*
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 
@@ -17,42 +20,41 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor
 ) : ViewModel() {
 
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
     private val _state = MutableLiveData<SearchState>()
     val state: LiveData<SearchState> get() = _state
 
     private val _tracks = MutableLiveData<List<Track>>()
     val tracks: LiveData<List<Track>> get() = _tracks
 
-    private val executor: Executor = Executors.newSingleThreadExecutor()
+    private var latestSearchText: String? = null
+    private var searchJob: Job? = null
 
     fun searchTracks(query: String) {
         _state.value = LOADING
-        executor.execute {
-            searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
-                    if (foundTracks != null) {
+        viewModelScope.launch {
+            searchInteractor.searchTracks(query).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        val foundTracks = result.data ?: emptyList()
                         _tracks.postValue(foundTracks)
-                        _state.postValue(if (foundTracks.isEmpty()) {
-                            NOTHING_FOUND
-                        } else {
-                            CONTENT
-                        })
-                    } else {
+                        _state.postValue(if (foundTracks.isEmpty()) NOTHING_FOUND else CONTENT)
+                    }
+                    is Resource.Error -> {
                         _state.postValue(COMMUNICATION_PROBLEMS)
                     }
                 }
-            })
+            }
         }
     }
 
     fun getSearchHistory() {
         val history = historyInteractor.getSearchHistory()
         _tracks.value = history
-        if (history.isEmpty()) {
-            _state.value = HISTORY_EMPTY
-        } else {
-            _state.value = HISTORY
-        }
+        _state.value = if (history.isEmpty()) HISTORY_EMPTY else HISTORY
     }
 
     fun clearHistory() {
@@ -64,25 +66,19 @@ class SearchViewModel(
         historyInteractor.addTrackToHistory(track)
         getSearchHistory()
     }
+    fun searchDebounce(changedText: String) {
+        if (latestSearchText == changedText) {
+            return
+        }
 
-    fun searchDebounced(query: String) {
-        _state.value = LOADING
-        executor.execute {
-            searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?, isFailed: Boolean?) {
-                    if (foundTracks != null) {
-                        _tracks.postValue(foundTracks)
-                        _state.postValue(if (foundTracks.isEmpty()) {
-                            NOTHING_FOUND
-                        } else {
-                            CONTENT
-                        })
-                    } else {
-                        _state.postValue(COMMUNICATION_PROBLEMS)
-                    }
-                }
-            })
+        latestSearchText = changedText
+
+        searchJob?.cancel()
+        if (changedText.isNotEmpty()) {
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                searchTracks(changedText)
+            }
         }
     }
-
 }
