@@ -20,7 +20,7 @@ val searchModule = module {
     single { Gson() }
     single<NetworkClient>{RetrofitNetworkClient() }
 
-    single<TracksRepository> { TracksRepositoryImpl(get()) }
+    single<TracksRepository> { TracksRepositoryImpl(get(), get(), get()) }
 
     single<HistoryRepository> { HistoryRepositoryImpl(get(), get()) }
 

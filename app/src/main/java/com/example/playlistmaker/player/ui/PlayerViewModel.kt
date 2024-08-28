@@ -4,14 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.player.domain.api.PlayerInteractor
+import  com.example.playlistmaker.media_library.domain.db.FavoriteInteractor
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
+    private val favoriteInteractor: FavoriteInteractor,
     private val previewUrl: String?
 ) : ViewModel() {
     companion object {
@@ -21,6 +25,10 @@ class PlayerViewModel(
         value = PlayerStateStatus.STATE_DEFAULT()
     }
     val playerState : LiveData<PlayerStateStatus> get() = _playerState
+
+    private var favoriteLiveData = MutableLiveData<Boolean>()
+    fun getFavoriteLiveData(): LiveData<Boolean> = favoriteLiveData
+
 
     private val _currentPosition = MutableLiveData<Int>().apply {
         value = 0
@@ -43,7 +51,13 @@ class PlayerViewModel(
         }
         preparePlayer()
     }
-
+     fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteInteractor.onFavoriteClicked(track)
+            track.isFavorite = !track.isFavorite
+            favoriteLiveData.postValue(track.isFavorite)
+        }
+    }
     private fun preparePlayer() {
         viewModelScope.launch {
             playerInteractor.preparePlayer(previewUrl)

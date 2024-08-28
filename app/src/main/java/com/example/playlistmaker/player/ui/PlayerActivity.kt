@@ -1,17 +1,18 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.TRACK_DATA
+import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,10 +21,9 @@ import org.koin.core.parameter.parametersOf
 class PlayerActivity : AppCompatActivity() {
     private val playerViewModel: PlayerViewModel by viewModel { parametersOf(track.previewUrl)  }
     private lateinit var track: Track
-    private lateinit var playbackProgress: TextView
-    private lateinit var playButton: ImageButton
+    private lateinit var binding: ActivityPlayerBinding
+    private var stateFavoriteButton = false
     val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,26 @@ class PlayerActivity : AppCompatActivity() {
 
         initializeUIComponents()
         observeViewModel()
-}
+
+        binding.favoriteButton.setOnClickListener{
+            lifecycleScope.launch {
+                playerViewModel.onFavoriteClicked(track)
+            }
+        }
+
+        playerViewModel.getFavoriteLiveData().observe(this) { state ->
+            stateFavoriteButton = state
+            updatefavoriteButton (stateFavoriteButton)
+        }
+    }
+
+    private fun updatefavoriteButton (stateFavoriteButton: Boolean) {
+        if (stateFavoriteButton) {
+            binding.favoriteButton.setImageResource(R.drawable.ic_lliked)
+        } else {
+            binding.favoriteButton.setImageResource(R.drawable.ic_favorite)
+        }
+    }
 
     override fun onPause() {
         super.onPause()
@@ -43,34 +62,20 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun initializeUIComponents() {
 
-    val backButton = findViewById<ImageButton>(R.id.playlistBackButton)
-        val cover = findViewById<ImageView>(R.id.playerAlbum)
-        val trackName = findViewById<TextView>(R.id.trackNamePlayer)
-        val artistName = findViewById<TextView>(R.id.artistNamePlayer)
-        playButton = findViewById(R.id.playButton)
-        val addTrack = findViewById<ImageButton>(R.id.addTrackPlaylist)
-        val favorite = findViewById<ImageButton>(R.id.favorite)
-        playbackProgress = findViewById(R.id.playbackProgress)
-        val trackTime = findViewById<TextView>(R.id.trackTimeMillisModelTrack)
-        val trackCollectionName = findViewById<TextView>(R.id.trackСollectionName)
-        val trackReleaseDate = findViewById<TextView>(R.id.trackReleaseDate)
-        val trackGenreName = findViewById<TextView>(R.id.trackGenreName)
-        val trackCountry = findViewById<TextView>(R.id.trackCountry)
-        val collection = findViewById<TextView>(R.id.collection)
         val trackReleaseYear = track.releaseDate?.substring(0..3)
 
-        playButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             playbackControl()
         }
 
         track.let {
-            trackName.text = track.trackName
-            artistName.text = track.artistName
-            trackTime.text = dateFormat.format(track.trackTimeMillis)
-            trackCollectionName.text = track.collectionName ?: ""
-            trackReleaseDate.text = trackReleaseYear
-            trackGenreName.text = track.primaryGenreName ?: ""
-            trackCountry.text = track.country ?: ""
+            binding.trackNamePlayer.text = track.trackName
+            binding.artistNamePlayer.text = track.artistName
+            binding.trackTimeMillisModelTrack.text = dateFormat.format(track.trackTimeMillis)
+            binding.trackOllectionName.text = track.collectionName ?: ""
+            binding.trackReleaseDate.text = trackReleaseYear
+            binding.trackGenreName.text = track.primaryGenreName ?: ""
+            binding.trackCountry.text = track.country ?: ""
         }
 
         Glide.with(this)
@@ -78,12 +83,12 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.ic_player_placeholder)
             .centerCrop()
             .transform(RoundedCorners(8))
-            .into(cover)
+            .into(binding.playerAlbum)
 
-        collection.isVisible = trackCollectionName.text.isNotEmpty()
-        trackCollectionName.isVisible = trackCollectionName.text.isNotEmpty()
+        binding.collection.isVisible = binding.trackOllectionName.text.isNotEmpty()
+        binding.trackOllectionName.isVisible = binding.trackOllectionName.text.isNotEmpty()
 
-        backButton.setOnClickListener {
+        binding.playlistBackButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
     }
@@ -93,14 +98,14 @@ class PlayerActivity : AppCompatActivity() {
             updateUI(state)
         }
         playerViewModel.currentPosition.observe(this) { position ->
-            playbackProgress.text = dateFormat.format(position)
+            binding.playbackProgress.text = dateFormat.format(position)
         }
     }
 
     private fun updateUI(state: PlayerStateStatus) {
         when (state) {
-            is PlayerStateStatus.STATE_PLAYING -> playButton.setImageResource(R.drawable.ic_pausebutton)
-            is PlayerStateStatus.STATE_PAUSED, is PlayerStateStatus.STATE_PREPARED -> playButton.setImageResource(R.drawable.ic_playbutton)
+            is PlayerStateStatus.STATE_PLAYING -> binding.playButton.setImageResource(R.drawable.ic_pausebutton)
+            is PlayerStateStatus.STATE_PAUSED, is PlayerStateStatus.STATE_PREPARED -> binding.playButton.setImageResource(R.drawable.ic_playbutton)
             else -> {}
         }
     }
