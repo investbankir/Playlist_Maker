@@ -23,6 +23,7 @@ val mediaLibraryModule = module {
 
     single { Room.databaseBuilder(androidContext(),AppDatabase::class.java, "database.db")
         .build()}
+    single { get<AppDatabase>().trackDao() }
 
     factory { TrackDbConvertor() }
 

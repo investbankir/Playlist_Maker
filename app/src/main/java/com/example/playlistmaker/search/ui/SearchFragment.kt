@@ -62,11 +62,10 @@ class SearchFragment: Fragment() {
         })
 
         viewModel.tracks.observe(viewLifecycleOwner, Observer { tracks ->
-            trackAdapter.trackList = ArrayList(tracks)
-            trackAdapter.notifyDataSetChanged()
+            trackAdapter.submitList(tracks)
         })
 
-            trackAdapter = TrackListAdapter(requireContext(), trackList) { track ->
+            trackAdapter = TrackListAdapter { track -> //было после адаптера (requireContext())
                 if (clickDebounce()) {
                     clickToTrack(track)
                 }

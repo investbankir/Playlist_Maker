@@ -3,6 +3,7 @@ package com.example.playlistmaker.player.ui
 import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -19,6 +20,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
+    companion object{
+        private const val ARGS_TRACK_ID = "track_id"
+        fun createArgs(track: Track): Bundle =
+            bundleOf(ARGS_TRACK_ID to track)
+    }
     private val playerViewModel: PlayerViewModel by viewModel { parametersOf(track.previewUrl)  }
     private lateinit var track: Track
     private lateinit var binding: ActivityPlayerBinding
@@ -29,10 +35,16 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         track = intent.getParcelableExtra(TRACK_DATA) ?:
         throw IllegalArgumentException("Track data not found in Intent")
 
         initializeUIComponents()
+        binding.playButton.setOnClickListener {
+            playbackControl()
+        }
         observeViewModel()
 
         binding.favoriteButton.setOnClickListener{
@@ -61,12 +73,9 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun initializeUIComponents() {
-
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val trackReleaseYear = track.releaseDate?.substring(0..3)
-
-        binding.playButton.setOnClickListener {
-            playbackControl()
-        }
 
         track.let {
             binding.trackNamePlayer.text = track.trackName

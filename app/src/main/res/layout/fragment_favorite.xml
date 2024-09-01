@@ -8,8 +8,7 @@
     android:layout_gravity="center"
     tools:context="com.example.playlistmaker.media_library.ui.FavoritesFragment">
 
-
-<ImageView
+    <ImageView
     android:id="@+id/imageML"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -21,6 +20,7 @@
     android:visibility="visible"/>
 
     <TextView
+        android:id="@+id/textML"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/empty_medialibrary"
@@ -31,5 +31,15 @@
         app:layout_constraintTop_toBottomOf="@id/imageML"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/track_item"
+        tools:itemCount="10"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

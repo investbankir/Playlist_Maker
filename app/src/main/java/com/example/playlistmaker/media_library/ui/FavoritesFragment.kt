@@ -1,26 +1,40 @@
 package com.example.playlistmaker.media_library.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.playlistmaker.R
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.search.ui.TrackListAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding
-import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.SearchFragment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+private const val CLICK_DEBOUNCE_DELAY = 1000L
 
 class FavoritesFragment : Fragment() {
     private val viewModel : FavoritesViewModel by viewModel()
+
+    private var isClickAllowed = true
+
+
+    private lateinit var trackAdapter: TrackListAdapter
+
     private var _binding : FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var searchBinding: FragmentSearchBinding
 
-    private lateinit var trackAdapter: TrackListAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,6 +47,12 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        trackAdapter = TrackListAdapter { track ->
+            if (clickDebounce()) {
+                findNavController().navigate(R.id.action_favoritesFragment_to_playerActivity,
+                    PlayerActivity.createArgs(track))
+            }
+        }
         setupRecyclerView()
 
         viewModel.getFavoriteLiveData().observe(viewLifecycleOwner) { tracks ->
@@ -42,11 +62,29 @@ class FavoritesFragment : Fragment() {
         viewModel.getFavorites()
     }
 
-    private fun setupRecyclerView() {
-        trackAdapter = TrackListAdapter(requireContext(), arrayListOf()) { track ->
+        //private fun clickToTrack(track: Track) {
+      //  viewModel.getFavorites()
+        //val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
+ //       playerIntent.putExtra("track", track)
+   //     startActivity(playerIntent)
+   // }
+    private fun clickDebounce() : Boolean{
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
+        return current
+    }
 
-        with(searchBinding.rvTrackList) {
+    private fun setupRecyclerView() {
+      //  trackAdapter = TrackListAdapter(requireContext()) { track ->
+        //}
+
+        with(binding.rvFragment) {
             layoutManager = LinearLayoutManager(context)
             adapter = trackAdapter
         }
@@ -54,14 +92,14 @@ class FavoritesFragment : Fragment() {
 
     private fun updateUI(tracks: List<Track>) {
         if (tracks.isEmpty()) {
-            searchBinding.rvTrackList.isVisible = false
+            binding.rvFragment.isVisible = false
             binding.imageML.isVisible = true
+            binding.textML.isVisible = true
         } else {
-            searchBinding.rvTrackList.isVisible = true
+            binding.rvFragment.isVisible = true
             binding.imageML.isVisible = false
-            trackAdapter.trackList.clear()
-            trackAdapter.trackList.addAll(tracks)
-            trackAdapter.notifyDataSetChanged()
+            binding.textML.isVisible = false
+            trackAdapter.submitList(tracks)
         }
     }
 
