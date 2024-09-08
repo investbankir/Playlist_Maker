@@ -11,5 +11,5 @@ interface FavoriteRepository {
     suspend fun deleteTrack(track: TrackEntity)
     fun getTracks(): Flow<List<Track>>
     suspend fun onFavoriteClicked(track: Track)
-
+    suspend fun isFavorite(trackId: Int): Boolean
 }

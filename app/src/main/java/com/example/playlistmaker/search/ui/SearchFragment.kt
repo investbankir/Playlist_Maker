@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -66,11 +65,11 @@ class SearchFragment: Fragment() {
             trackAdapter.submitList(tracks)
         })
 
-            trackAdapter = TrackListAdapter(requireContext()){ track ->
+            trackAdapter = TrackListAdapter{
                 if (clickDebounce()) {
-                   // clickToTrack(track)
+                    viewModel.addTrackHistory(it)
                     findNavController().navigate(R.id.action_searchFragment_to_playerActivity,
-                      PlayerActivity.createArgs(track))
+                      PlayerActivity.createArgs(it))
                 }
             }
 
@@ -143,13 +142,6 @@ class SearchFragment: Fragment() {
             }
         }
         return current
-    }
-
-    private fun clickToTrack(track: Track) {
-        viewModel.addTrackHistory(track)
-        val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
-        playerIntent.putExtra("track", track)
-        startActivity(playerIntent)
     }
     private fun showLoading() {
         binding.progressBar.isVisible = true

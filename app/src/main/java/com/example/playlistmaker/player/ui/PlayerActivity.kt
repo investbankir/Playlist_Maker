@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.search.ui.TRACK_DATA
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 import com.example.playlistmaker.search.domain.models.Track
@@ -18,7 +17,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-var isChangedFavorites: Boolean = false
 class PlayerActivity : AppCompatActivity() {
     companion object{
         private const val ARGS_TRACK_ID = "track_id"
@@ -28,8 +26,27 @@ class PlayerActivity : AppCompatActivity() {
     private val playerViewModel: PlayerViewModel by viewModel { parametersOf(track.previewUrl)  }
     private lateinit var track: Track
     private lateinit var binding: ActivityPlayerBinding
-    private var stateFavoriteButton = false
     val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
+
+    private fun observeViewModel() {
+        playerViewModel.playerState.observe(this) { state ->
+            updateUI(state)
+        }
+        playerViewModel.currentPosition.observe(this) { position ->
+            binding.playbackProgress.text = dateFormat.format(position)
+        }
+        //Подписка на состояние кнопки
+        playerViewModel.getFavoriteLiveData().observe(this) { isFavorite ->
+            updatefavoriteButton(isFavorite)
+        }
+    }
+    private fun updatefavoriteButton (isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.favoriteButton.setImageResource(R.drawable.ic_lliked)
+        } else {
+            binding.favoriteButton.setImageResource(R.drawable.ic_favorite)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +55,16 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        intent.getParcelableExtra<Track>(ARGS_TRACK_ID) ?:
+        track = intent.getParcelableExtra(ARGS_TRACK_ID) ?:
         throw IllegalArgumentException("Track data not found in Intent")
 
 
         initializeUIComponents()
 
-        //lifecycleScope.launch {
-          //  val isFavorite = playerViewModel.isTrackFavorite(track.trackId)
-            //updatefavoriteButton(isFavorite)
-            //stateFavoriteButton = isFavorite
-        //}
+        lifecycleScope.launch {
+            val isFavorite = playerViewModel.isTrackFavorite(track.trackId)
+            updatefavoriteButton(isFavorite)
+        }
 
 
         binding.playButton.setOnClickListener {
@@ -60,21 +76,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.favoriteButton.setOnClickListener{
             lifecycleScope.launch {
                 track?.let { playerViewModel.onFavoriteClicked(it) }
-                isChangedFavorites = true
             }
-        }
-
-        playerViewModel.getFavoriteLiveData().observe(this) { state ->
-            stateFavoriteButton = state
-            updatefavoriteButton (stateFavoriteButton)
-        }
-    }
-
-    private fun updatefavoriteButton (stateFavoriteButton: Boolean) {
-        if (stateFavoriteButton) {
-            binding.favoriteButton.setImageResource(R.drawable.ic_lliked)
-        } else {
-            binding.favoriteButton.setImageResource(R.drawable.ic_favorite)
         }
     }
 
@@ -110,15 +112,6 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playlistBackButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
-        }
-    }
-
-    private fun observeViewModel() {
-        playerViewModel.playerState.observe(this) { state ->
-            updateUI(state)
-        }
-        playerViewModel.currentPosition.observe(this) { position ->
-            binding.playbackProgress.text = dateFormat.format(position)
         }
     }
 

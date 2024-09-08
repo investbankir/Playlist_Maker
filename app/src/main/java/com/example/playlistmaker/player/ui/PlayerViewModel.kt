@@ -85,6 +85,9 @@ class PlayerViewModel(
             }
         }
     }
+    suspend fun isTrackFavorite(trackId: Int): Boolean {
+        return favoriteInteractor.isFavorite(trackId)
+    }
 
     private fun stopUpdatingPosition() {
         updatePositionJob?.cancel()

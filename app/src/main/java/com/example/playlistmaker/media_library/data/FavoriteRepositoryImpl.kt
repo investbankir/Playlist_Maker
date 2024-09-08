@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import com.example.playlistmaker.media_library.data.db.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
@@ -41,5 +42,9 @@ class FavoriteRepositoryImpl(
         } else {
             insertTrack(trackEntity)
         }
+    }
+    override suspend fun isFavorite(trackId: Int): Boolean {
+        val favoriteTracks = getTracks().first() // или другой источник данных
+        return favoriteTracks.any { it.trackId == trackId }
     }
 }
