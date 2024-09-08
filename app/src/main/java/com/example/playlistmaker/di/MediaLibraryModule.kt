@@ -22,6 +22,7 @@ val mediaLibraryModule = module {
     viewModel { PlaylistViewModel() }
 
     single { Room.databaseBuilder(androidContext(),AppDatabase::class.java, "database.db")
+        .fallbackToDestructiveMigration()
         .build()}
     single { get<AppDatabase>().trackDao() }
 

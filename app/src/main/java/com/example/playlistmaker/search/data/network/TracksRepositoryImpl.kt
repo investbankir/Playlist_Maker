@@ -35,7 +35,7 @@ class TracksRepositoryImpl(
                         it.country,
                         it.trackTimeMillis,
                         it.previewUrl,
-                        isFavorite(it.trackId, favoriteListId)
+                        isFavorite(it.trackId, favoriteListId),
                     )
                 }))
             }

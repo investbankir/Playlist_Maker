@@ -16,6 +16,7 @@ import com.example.playlistmaker.search.ui.TrackListAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.isChangedFavorites
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchFragment
 import kotlinx.coroutines.delay
@@ -27,7 +28,6 @@ class FavoritesFragment : Fragment() {
     private val viewModel : FavoritesViewModel by viewModel()
 
     private var isClickAllowed = true
-
 
     private lateinit var trackAdapter: TrackListAdapter
 
@@ -47,10 +47,11 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackListAdapter { track ->
+        trackAdapter = TrackListAdapter(requireContext()) { track ->
             if (clickDebounce()) {
-                findNavController().navigate(R.id.action_favoritesFragment_to_playerActivity,
-                    PlayerActivity.createArgs(track))
+                //findNavController().navigate(R.id.action_favoritesFragment_to_playerActivity,
+                  //  PlayerActivity.createArgs(track))
+                clickToTrack(track)
             }
         }
         setupRecyclerView()
@@ -62,12 +63,12 @@ class FavoritesFragment : Fragment() {
         viewModel.getFavorites()
     }
 
-        //private fun clickToTrack(track: Track) {
-      //  viewModel.getFavorites()
-        //val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
- //       playerIntent.putExtra("track", track)
-   //     startActivity(playerIntent)
-   // }
+        private fun clickToTrack(track: Track) {
+        viewModel.getFavorites()
+        val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
+        playerIntent.putExtra("track", track)
+        startActivity(playerIntent)
+    }
     private fun clickDebounce() : Boolean{
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -81,12 +82,11 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-      //  trackAdapter = TrackListAdapter(requireContext()) { track ->
-        //}
-
-        with(binding.rvFragment) {
-            layoutManager = LinearLayoutManager(context)
-            adapter = trackAdapter
+       // trackAdapter = TrackListAdapter(requireContext()) { track ->//Перепроверить мб без адаптера сделать
+            with(binding.rvFragment) {
+                layoutManager = LinearLayoutManager(context)
+                adapter = trackAdapter
+         //   }
         }
     }
 
@@ -101,6 +101,19 @@ class FavoritesFragment : Fragment() {
             binding.textML.isVisible = false
             trackAdapter.submitList(tracks)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (isChangedFavorites) {
+            viewModel.getFavorites()
+        }
+        isChangedFavorites = false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
     }
 
     override fun onDestroyView() {

@@ -10,7 +10,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackListAdapter (
-    //private val context : Context,
+    private val context : Context,
     private val clickListener: (Track) -> Unit): ListAdapter<Track, TrackViewHolder>(TrackDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {

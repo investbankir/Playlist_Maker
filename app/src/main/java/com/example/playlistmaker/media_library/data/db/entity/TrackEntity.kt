@@ -16,4 +16,6 @@ data class TrackEntity(
     val country : String?,
     val trackTimeMillis: Long?,
     val previewUrl : String?,
+    // Ставим дату добавления трэка в таблицу, по умолчанию текущее время
+    val addedTimestamp: Long = System.currentTimeMillis()
 )

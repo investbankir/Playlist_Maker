@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-
+var isChangedFavorites: Boolean = false
 class PlayerActivity : AppCompatActivity() {
     companion object{
         private const val ARGS_TRACK_ID = "track_id"
@@ -38,18 +38,29 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        track = intent.getParcelableExtra(TRACK_DATA) ?:
+        intent.getParcelableExtra<Track>(ARGS_TRACK_ID) ?:
         throw IllegalArgumentException("Track data not found in Intent")
 
+
         initializeUIComponents()
+
+        //lifecycleScope.launch {
+          //  val isFavorite = playerViewModel.isTrackFavorite(track.trackId)
+            //updatefavoriteButton(isFavorite)
+            //stateFavoriteButton = isFavorite
+        //}
+
+
         binding.playButton.setOnClickListener {
             playbackControl()
         }
         observeViewModel()
 
+        //Отработка нажатия на кнопку избранное
         binding.favoriteButton.setOnClickListener{
             lifecycleScope.launch {
-                playerViewModel.onFavoriteClicked(track)
+                track?.let { playerViewModel.onFavoriteClicked(it) }
+                isChangedFavorites = true
             }
         }
 

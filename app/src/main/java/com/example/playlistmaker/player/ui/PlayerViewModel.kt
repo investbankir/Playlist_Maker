@@ -51,7 +51,7 @@ class PlayerViewModel(
         }
         preparePlayer()
     }
-     fun onFavoriteClicked(track: Track) {
+    suspend fun onFavoriteClicked(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
             favoriteInteractor.onFavoriteClicked(track)
             track.isFavorite = !track.isFavorite

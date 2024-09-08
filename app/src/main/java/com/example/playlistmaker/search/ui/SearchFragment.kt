@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
@@ -65,9 +66,11 @@ class SearchFragment: Fragment() {
             trackAdapter.submitList(tracks)
         })
 
-            trackAdapter = TrackListAdapter { track -> //было после адаптера (requireContext())
+            trackAdapter = TrackListAdapter(requireContext()){ track ->
                 if (clickDebounce()) {
-                    clickToTrack(track)
+                   // clickToTrack(track)
+                    findNavController().navigate(R.id.action_searchFragment_to_playerActivity,
+                      PlayerActivity.createArgs(track))
                 }
             }
 

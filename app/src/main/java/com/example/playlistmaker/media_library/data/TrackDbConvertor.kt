@@ -16,7 +16,8 @@ class TrackDbConvertor {
             track.country,
             track.trackTimeMillis,
             track.previewUrl,
-            )
+            System.currentTimeMillis() // Добавляем время добавления при записи в БД
+        )
     }
 
     fun map(track: TrackEntity) : Track{
