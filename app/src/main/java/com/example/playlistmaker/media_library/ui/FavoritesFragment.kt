@@ -89,6 +89,10 @@ class FavoritesFragment : Fragment() {
             trackAdapter.submitList(tracks)
         }
     }
+    override fun onResume() {
+        super.onResume()
+        viewModel.getFavorites()
+    }
     override fun onStop() {
         super.onStop()
         isClickAllowed = true
