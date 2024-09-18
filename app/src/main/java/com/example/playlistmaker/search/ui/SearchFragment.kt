@@ -166,6 +166,10 @@ class SearchFragment: Fragment() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = true
         binding.SearchResult.isVisible = false
+        binding.ImageProblem.isVisible = false
+        binding.SeachResultStatus.isVisible = false
+        binding.RefreshButton.isVisible = true
+        binding.searchHistory.isVisible = true
     }
     private fun showHistory() {
         if(binding.inputEditText.text.isNullOrEmpty()) {
@@ -178,7 +182,6 @@ class SearchFragment: Fragment() {
             viewModel.searchTracks(binding.inputEditText.text.toString().trim())
         }
     }
-
     private fun showEmptyHistory() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = true
@@ -190,25 +193,24 @@ class SearchFragment: Fragment() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = false
         binding.SearchResult.isVisible = true
+        binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_nothing_was_found)
+        binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.nothingWasFoundText)
         binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
-
         binding.inputEditText.isVisible = true
-        binding.rvTrackList.isVisible = true
     }
     private fun showCommunicationProblems() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = false
         binding.SearchResult.isVisible = true
+        binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_communication_problems)
+        binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.ProblemConnections)
         binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
-
-        binding.inputEditText.isVisible = true
-        binding.rvTrackList.isVisible = true
     }
 
     private fun hideKeyboard(editText: EditText) {

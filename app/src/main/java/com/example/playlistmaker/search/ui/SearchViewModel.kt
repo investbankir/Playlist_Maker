@@ -32,7 +32,8 @@ class SearchViewModel(
                     is Resource.Success -> {
                         val foundTracks = result.data ?: emptyList()
                         _tracks.postValue(foundTracks)
-                        _state.postValue(if (foundTracks.isEmpty()) NOTHING_FOUND else CONTENT)
+                        _state.postValue(
+                            if (foundTracks.isEmpty()) NOTHING_FOUND else CONTENT)
                     }
                     is Resource.Error -> {
                         _state.postValue(COMMUNICATION_PROBLEMS)
