@@ -9,8 +9,6 @@ import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.ui.SearchState.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -20,18 +18,11 @@ class SearchViewModel(
     private val historyInteractor: HistoryInteractor
 ) : ViewModel() {
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
     private val _state = MutableLiveData<SearchState>()
     val state: LiveData<SearchState> get() = _state
 
     private val _tracks = MutableLiveData<List<Track>>()
     val tracks: LiveData<List<Track>> get() = _tracks
-
-    private var latestSearchText: String? = null
-    private var searchJob: Job? = null
 
     fun searchTracks(query: String) {
         _state.value = LOADING
@@ -41,7 +32,8 @@ class SearchViewModel(
                     is Resource.Success -> {
                         val foundTracks = result.data ?: emptyList()
                         _tracks.postValue(foundTracks)
-                        _state.postValue(if (foundTracks.isEmpty()) NOTHING_FOUND else CONTENT)
+                        _state.postValue(
+                            if (foundTracks.isEmpty()) NOTHING_FOUND else CONTENT)
                     }
                     is Resource.Error -> {
                         _state.postValue(COMMUNICATION_PROBLEMS)
@@ -65,20 +57,5 @@ class SearchViewModel(
     fun addTrackHistory(track: Track) {
         historyInteractor.addTrackToHistory(track)
         getSearchHistory()
-    }
-    fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
-            return
-        }
-
-        latestSearchText = changedText
-
-        searchJob?.cancel()
-        if (changedText.isNotEmpty()) {
-            searchJob = viewModelScope.launch {
-                delay(SEARCH_DEBOUNCE_DELAY)
-                searchTracks(changedText)
-            }
-        }
     }
 }

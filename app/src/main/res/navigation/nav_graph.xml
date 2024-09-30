@@ -11,7 +11,11 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_playerActivity"
-            app:destination="@id/playerActivity" />
+            app:destination="@id/playerActivity" >
+            <argument
+                android:name="track"
+                app:argType="com.example.playlistmaker.search.domain.models.Track"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/mediaLibraryFragment"
@@ -19,8 +23,12 @@
         android:label="fragment_media_library"
         tools:layout="@layout/fragment_media_library" >
         <action
-            android:id="@+id/action_mediaLibraryFragment_to_playerActivity"
-            app:destination="@id/playerActivity" />
+            android:id="@+id/action_favoritesFragment_to_playerActivity"
+            app:destination="@id/playerActivity" >
+            <argument
+                android:name="track"
+                app:argType="com.example.playlistmaker.search.domain.models.Track"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -32,14 +40,15 @@
         android:name="com.example.playlistmaker.player.ui.PlayerActivity"
         android:label="activity_player"
         tools:layout="@layout/activity_player" />
-    <fragment
-        android:id="@+id/favoritesFragment"
-        android:name="com.example.playlistmaker.media_library.ui.FavoritesFragment"
-        android:label="fragment_favorite"
-        tools:layout="@layout/fragment_favorite" />
+
     <fragment
         android:id="@+id/playListFragment"
         android:name="com.example.playlistmaker.media_library.ui.PlayListFragment"
         android:label="fragment_playlist"
         tools:layout="@layout/fragment_playlist" />
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.playlistmaker.media_library.ui.FavoritesFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
 </navigation>

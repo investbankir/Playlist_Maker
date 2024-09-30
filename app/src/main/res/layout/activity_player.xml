@@ -136,7 +136,7 @@
             style="@style/addTrackStyle" />
 
         <ImageButton
-            android:id="@+id/favorite"
+            android:id="@+id/favoriteButton"
             style="@style/favoriteStyle"/>
 
         <TextView

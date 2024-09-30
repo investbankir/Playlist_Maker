@@ -1,7 +1,6 @@
 package com.example.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,10 +14,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlinx.coroutines.launch
@@ -28,7 +29,11 @@ class SearchFragment: Fragment() {
     companion object {
         private const val EDIT_TEXT_KEY = "EDIT_TEXT_KEY"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+
     }
+    private var latestSearchText: String? = null
+    private var searchJob: Job? = null
 
     private lateinit var binding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
@@ -62,13 +67,14 @@ class SearchFragment: Fragment() {
         })
 
         viewModel.tracks.observe(viewLifecycleOwner, Observer { tracks ->
-            trackAdapter.trackList = ArrayList(tracks)
-            trackAdapter.notifyDataSetChanged()
+            trackAdapter.submitList(tracks)
         })
 
-            trackAdapter = TrackListAdapter(requireContext(), trackList) { track ->
+            trackAdapter = TrackListAdapter{
                 if (clickDebounce()) {
-                    clickToTrack(track)
+                    viewModel.addTrackHistory(it)
+                    findNavController().navigate(R.id.action_searchFragment_to_playerActivity,
+                      PlayerActivity.createArgs(it))
                 }
             }
 
@@ -93,7 +99,12 @@ class SearchFragment: Fragment() {
                 savedValue = s.toString()
                 binding.clearButton.isVisible = clearButtonVisibility(s)
                 binding.clearButtonHistory.isVisible = false
-                viewModel.searchDebounce(s.toString())
+                if (s.isNullOrEmpty()) {
+                    viewModel.getSearchHistory()
+                } else {
+                    searchDebounce(s.toString())
+
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -123,11 +134,15 @@ class SearchFragment: Fragment() {
         return !s.isNullOrEmpty()
     }
     private fun searchTracks() {
-        showLoading()
         val query = binding.inputEditText.text.toString().trim()
         if (query.isNotEmpty()) {
+            showLoading()
             viewModel.searchTracks(query)
             hideKeyboard(binding.inputEditText)
+        } else {
+            viewModel.getSearchHistory()
+            binding.rvTrackList.isVisible = false
+            binding.SearchResult.isVisible = false
         }
     }
 
@@ -142,13 +157,6 @@ class SearchFragment: Fragment() {
         }
         return current
     }
-
-    private fun clickToTrack(track: Track) {
-        viewModel.addTrackHistory(track)
-        val playerIntent = Intent(requireContext(), PlayerActivity::class.java)
-        playerIntent.putExtra("track", track)
-        startActivity(playerIntent)
-    }
     private fun showLoading() {
         binding.progressBar.isVisible = true
         binding.rvTrackList.isVisible = false
@@ -157,6 +165,11 @@ class SearchFragment: Fragment() {
     private fun showContent() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = true
+        binding.SearchResult.isVisible = false
+        binding.ImageProblem.isVisible = false
+        binding.SeachResultStatus.isVisible = false
+        binding.RefreshButton.isVisible = true
+        binding.searchHistory.isVisible = true
     }
     private fun showHistory() {
         if(binding.inputEditText.text.isNullOrEmpty()) {
@@ -169,7 +182,6 @@ class SearchFragment: Fragment() {
             viewModel.searchTracks(binding.inputEditText.text.toString().trim())
         }
     }
-
     private fun showEmptyHistory() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = true
@@ -181,16 +193,21 @@ class SearchFragment: Fragment() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = false
         binding.SearchResult.isVisible = true
+        binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_nothing_was_found)
+        binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.nothingWasFoundText)
         binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
+        binding.inputEditText.isVisible = true
     }
     private fun showCommunicationProblems() {
         binding.progressBar.isVisible = false
         binding.rvTrackList.isVisible = false
         binding.SearchResult.isVisible = true
+        binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_communication_problems)
+        binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.ProblemConnections)
         binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
@@ -203,5 +220,19 @@ class SearchFragment: Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EDIT_TEXT_KEY, savedValue)
+    }
+    fun searchDebounce(changedText: String) {
+        if (latestSearchText == changedText) {
+            return
+        }
+        latestSearchText = changedText
+        searchJob?.cancel()
+        if (changedText.isNotEmpty()) {
+            searchJob = lifecycleScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY)
+                viewModel.searchTracks(changedText)
+                hideKeyboard(binding.inputEditText)
+            }
+        }
     }
 }

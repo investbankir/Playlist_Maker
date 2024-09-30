@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface SearchInteractor {
-    fun searchTracks(exception: String): Flow<Resource<List<Track>>>
+    suspend fun searchTracks(exception: String): Flow<Resource<List<Track>>>
 
 }
