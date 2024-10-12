@@ -45,10 +45,19 @@
         android:id="@+id/playListFragment"
         android:name="com.example.playlistmaker.media_library.ui.PlayListFragment"
         android:label="fragment_playlist"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+
+        <action
+            android:id="@+id/action_playListFragment_to_createNewPlaylistFragment"
+            app:destination="@id/createNewPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.playlistmaker.media_library.ui.FavoritesFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
+    <fragment
+        android:id="@+id/createNewPlaylistFragment"
+        android:name="com.example.playlistmaker.create_new_playlist.ui.CreateNewPlaylistFragment"
+        android:label="CreateNewPlaylistFragment" />
 </navigation>

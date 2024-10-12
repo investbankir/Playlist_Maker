@@ -3,16 +3,30 @@
     <dimen name="primary_text">22sp</dimen>
     <dimen name="button_text">16sp</dimen>
     <dimen name="iconPadding">8dp</dimen>
-    <dimen name="RoundedCorners8">8</dimen>
+    <dimen name="dimen10">10dp</dimen>
+    <dimen name="dimen12">12dp</dimen>
+    <dimen name="dimen15">15dp</dimen>
     <dimen name="dimen16">16dp</dimen>
+    <dimen name="dimen17">17dp</dimen>
     <dimen name="dimen20">20dp</dimen>
     <dimen name="dimen24">24dp</dimen>
     <dimen name="dimen30">30dp</dimen>
+    <dimen name="dimen32">32dp</dimen>
+    <dimen name="dimen33">33dp</dimen>
+    <dimen name="dimen44">44dp</dimen>
+    <dimen name="dimen54">54dp</dimen>
     <dimen name="dimen56">56dp</dimen>
     <dimen name="dimen64">64dp</dimen>
     <dimen name="dimen106">106dp</dimen>
+    <dimen name="dimen326">326dp</dimen>
+    <dimen name="dimen328">328dp</dimen>
     <dimen name="text14">14sp</dimen>
+    <dimen name="text16">16sp</dimen>
     <dimen name="text19">19sp</dimen>
     <dimen name="progressBar">44dp</dimen>
+    <dimen name="dimen130">130dp</dimen>
     <dimen name="marginTopProgressBar">140dp</dimen>
+    <dimen name="RoundedCorners8">8</dimen>
+    <dimen name="RoundedCorners3.5">3.5</dimen>
+
 </resources>
