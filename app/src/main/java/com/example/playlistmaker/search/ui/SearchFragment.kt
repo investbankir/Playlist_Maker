@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -55,6 +55,10 @@ class SearchFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("isClickAllowed")?.observe(viewLifecycleOwner) {
+            isClickAllowed = it
+        }
+
         viewModel.state.observe(viewLifecycleOwner, Observer { state ->
             when (state) {
                 SearchState.LOADING -> showLoading()
@@ -73,8 +77,9 @@ class SearchFragment: Fragment() {
             trackAdapter = TrackListAdapter{
                 if (clickDebounce()) {
                     viewModel.addTrackHistory(it)
-                    findNavController().navigate(R.id.action_searchFragment_to_playerActivity,
-                      PlayerActivity.createArgs(it))
+                    findNavController().currentBackStackEntry?.savedStateHandle?.set("isClickAllowed", true)
+                    findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
+                      PlayerFragment.createArgs(it))
                 }
             }
 

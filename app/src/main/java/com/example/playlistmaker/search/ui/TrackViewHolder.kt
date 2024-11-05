@@ -1,15 +1,15 @@
 package com.example.playlistmaker.search.ui
 
-import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -37,9 +37,9 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
             .into(artworkUrl100)
 
         clickingOnTheTrack.setOnClickListener {
-            val intent = Intent(it.context, PlayerActivity::class.java)
-            intent.putExtra(TRACK_DATA, track)
-            it.context.startActivity(intent)
+            val navController = it.findNavController()
+            val bundle = PlayerFragment.createArgs(track)
+            navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
         }
     }
 }

@@ -22,7 +22,7 @@
             android:layout_gravity="center_vertical"
             style="@style/MediumTextStyle"
             android:text="@string/medialibrary"
-            android:textSize="@dimen/primary_text"
+            android:textSize="@dimen/text22"
             tools:ignore="MissingConstraints" />
     </LinearLayout>
     

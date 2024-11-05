@@ -33,6 +33,9 @@
     <string name="name_hint">Название*</string>
     <string name="description_hint">Описание</string>
     <string name="Create">Создать</string>
+    <string name="PlaylistName">Название альбома</string>
+    <string name="quantityTracks">00 трэков</string>
+    <string name="track">track</string>
 
     description
 

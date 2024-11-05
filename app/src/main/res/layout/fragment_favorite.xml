@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_gravity="center"
-    tools:context="com.example.playlistmaker.media_library.ui.FavoritesFragment">
+    tools:context="com.example.playlistmaker.media_library.ui.favorites.FavoritesFragment">
 
     <ImageView
     android:id="@+id/imageML"

@@ -16,9 +16,7 @@ class FavoriteRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val trackDbConvertor: TrackDbConvertor): FavoriteRepository {
     override suspend fun insertTrack(track: TrackEntity) {
-        //CoroutineScope(Dispatchers.IO).launch{
             appDatabase.trackDao().insertTracks(track)
-        //}
     }
 
     override suspend fun deleteTrack(track: TrackEntity) {
