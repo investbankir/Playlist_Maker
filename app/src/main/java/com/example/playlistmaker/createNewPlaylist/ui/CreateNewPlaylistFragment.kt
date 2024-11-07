@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import com.example.playlistmaker.R
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +33,14 @@ class CreateNewPlaylistFragment: Fragment() {
     private var _binding : FragmentNewPlaylistBinding? = null
     private val binding get() = _binding!!
     var playlistUri: String = ""
+
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {uri ->
+        if (uri != null) {
+            playlistUri = uri.toString()
+            viewModel.setUri(uri.toString())
+            showThePlaylistCover(uri)
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,11 +55,18 @@ class CreateNewPlaylistFragment: Fragment() {
         viewModel.isCreateNewPlaylistFragmentFiled = false
 
         if (savedInstanceState != null) {
-            var uri = savedInstanceState.getString(URIKEY, "")
-            if (uri.isNotEmpty()) {
-                showThePlaylistCover(uri.toUri())
-            }
+            playlistUri = savedInstanceState.getString(URIKEY, null) ?: ""
+        } else {
+            playlistUri = viewModel.playlistUri ?: ""
         }
+
+        if (playlistUri.isNotEmpty()) {
+            showThePlaylistCover(playlistUri.toUri())
+        }
+        binding.nameNewPlaylist.editText?.setText(viewModel.playlistName)
+        binding.descriptionNewPlaylist.editText?.setText(viewModel.playlistDescription)
+
+
         viewModel.isAddedPlaylist.observe(viewLifecycleOwner) { state ->
             when (state) {
                 PlaylistAddedState.SUCCESS -> {
@@ -68,24 +82,6 @@ class CreateNewPlaylistFragment: Fragment() {
                 }
             }
         }
-
-        binding.backBattonNewPlaylist.setOnClickListener {
-            if (viewModel.isCreateNewPlaylistFragmentFiled) {
-                showExitConfirmationDialog()
-            } else {
-                findNavController().popBackStack()
-            }
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (viewModel.isCreateNewPlaylistFragmentFiled) {
-                    showExitConfirmationDialog()
-                } else {
-                    findNavController().popBackStack()
-                }
-            }
-        })
 
         binding.createPlaylistButtom.isEnabled = false
 
@@ -112,21 +108,31 @@ class CreateNewPlaylistFragment: Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {uri ->
-            if (uri != null) {
-                playlistUri = uri.toString()
-                showThePlaylistCover(uri)
-                viewModel.setUri(playlistUri)
-            }
-        }
         binding.pickImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         binding.createPlaylistButtom.setOnClickListener{
-            Log.d("CreateNewPlaylistFragment", "Creating playlist...")
             saveNewPlaylist(playlistUri)
         }
+
+        binding.backBattonNewPlaylist.setOnClickListener {
+            if (viewModel.isCreateNewPlaylistFragmentFiled) {
+                showExitConfirmationDialog()
+            } else {
+                findNavController().popBackStack()
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (viewModel.isCreateNewPlaylistFragmentFiled) {
+                    showExitConfirmationDialog()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        })
     }
     fun saveNewPlaylist(playlistUri: String) {
         viewModel.addNewPlaylist(playlistUri)
