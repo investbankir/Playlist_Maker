@@ -133,6 +133,9 @@ class SearchFragment: Fragment() {
                 false
             }
         }
+        binding.RefreshButton.setOnClickListener {
+            searchTracks()
+        }
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Boolean {
@@ -200,9 +203,9 @@ class SearchFragment: Fragment() {
         binding.SearchResult.isVisible = true
         binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_nothing_was_found)
+        binding.RefreshButton.isVisible = false
         binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.nothingWasFoundText)
-        binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
         binding.inputEditText.isVisible = true
     }
@@ -212,9 +215,9 @@ class SearchFragment: Fragment() {
         binding.SearchResult.isVisible = true
         binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_communication_problems)
+        binding.RefreshButton.isVisible = true
         binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.ProblemConnections)
-        binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
     }
 
