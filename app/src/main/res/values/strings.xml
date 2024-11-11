@@ -13,7 +13,7 @@
     <string name="textMassageSupport">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="emailDeveloper">leopardo4174@ya.ru</string>
-    <string name="ProblemConnections">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="ProblemConnections">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="nothingWasFoundText">Ничего не нашлось</string>
     <string name="RefreshButtonText">Обновить</string>
     <string name="titleHistorySearch">Вы искали</string>
@@ -30,4 +30,13 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="favourites_tracks">Избранные треки</string>
     <string name="playLists">Плейлисты</string>
+    <string name="name_hint">Название*</string>
+    <string name="description_hint">Описание</string>
+    <string name="Create">Создать</string>
+    <string name="PlaylistName">Название альбома</string>
+    <string name="quantityTracks">00 трэков</string>
+    <string name="track">track</string>
+
+    description
+
 </resources>

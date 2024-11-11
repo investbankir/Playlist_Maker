@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.android.material:material:1.9.0")
     implementation ("io.insert-koin:koin-android:3.3.0")
     implementation ("androidx.activity:activity-ktx:1.9.1")
     implementation("androidx.core:core-ktx:1.13.1")

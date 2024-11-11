@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorOnPrimary"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.playlistmaker.player.ui.PlayerActivity">
+    tools:context="com.example.playlistmaker.player.ui.PlayerFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/leftBorder"
@@ -189,3 +196,68 @@
             app:srcCompat="@drawable/ic_player_placeholder" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone"/>
+    
+    <LinearLayout
+        android:id="@+id/playlistsBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_bs"
+        android:orientation="vertical"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:visibility="gone">
+
+        <View
+            style="@style/RectangleBottomSheet"
+            />
+        <TextView
+            android:id="@+id/addInPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            style="@style/MediumTextStyle"
+            android:textSize="@dimen/text19"
+            android:text="Добавить в плейлист"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/newPlayListButtonBottomSheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen16"
+            android:layout_gravity="center"
+            style="@style/MediumTextStyle"
+            android:textSize="@dimen/text14"
+            android:textColor="?attr/colorOnPrimary"
+            android:backgroundTint="?attr/colorOnSecondary"
+            app:cornerRadius="54dp"
+            android:text="@string/new_playlist"
+            android:textAllCaps="false"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newPlayListButtonBottomSheet"
+            tools:visibility="visible">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBottomSheet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout >

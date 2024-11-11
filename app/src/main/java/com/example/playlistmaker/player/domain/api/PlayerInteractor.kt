@@ -5,7 +5,8 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.player.domain.models.PlayerStateStatus
 
 
-interface PlayerInteractor {
+interface
+PlayerInteractor {
     suspend fun preparePlayer(url: String?): MediaPlayer
     suspend fun startPlayer(): Unit?
     suspend fun pausePlayer(): Unit?

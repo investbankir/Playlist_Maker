@@ -16,5 +16,5 @@ val playerModule = module {
 
     factory<PlayerInteractor> { PlayerInteractorImpl(get()) }
 
-    viewModel{ (previewUrl: String?) -> PlayerViewModel(get(), get(), previewUrl) }
+    viewModel{ (previewUrl: String?) -> PlayerViewModel(get(), get(), get(), get(),previewUrl) }
     }

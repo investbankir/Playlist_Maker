@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -55,6 +55,10 @@ class SearchFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("isClickAllowed")?.observe(viewLifecycleOwner) {
+            isClickAllowed = it
+        }
+
         viewModel.state.observe(viewLifecycleOwner, Observer { state ->
             when (state) {
                 SearchState.LOADING -> showLoading()
@@ -73,8 +77,9 @@ class SearchFragment: Fragment() {
             trackAdapter = TrackListAdapter{
                 if (clickDebounce()) {
                     viewModel.addTrackHistory(it)
-                    findNavController().navigate(R.id.action_searchFragment_to_playerActivity,
-                      PlayerActivity.createArgs(it))
+                    findNavController().currentBackStackEntry?.savedStateHandle?.set("isClickAllowed", true)
+                    findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
+                      PlayerFragment.createArgs(it))
                 }
             }
 
@@ -127,6 +132,9 @@ class SearchFragment: Fragment() {
             } else {
                 false
             }
+        }
+        binding.RefreshButton.setOnClickListener {
+            searchTracks()
         }
     }
 
@@ -195,9 +203,9 @@ class SearchFragment: Fragment() {
         binding.SearchResult.isVisible = true
         binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_nothing_was_found)
+        binding.RefreshButton.isVisible = false
         binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.nothingWasFoundText)
-        binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
         binding.inputEditText.isVisible = true
     }
@@ -207,9 +215,9 @@ class SearchFragment: Fragment() {
         binding.SearchResult.isVisible = true
         binding.ImageProblem.isVisible = true
         binding.ImageProblem.setImageResource(R.drawable.ic_communication_problems)
+        binding.RefreshButton.isVisible = true
         binding.SeachResultStatus.isVisible = true
         binding.SeachResultStatus.setText(R.string.ProblemConnections)
-        binding.RefreshButton.isVisible = false
         binding.searchHistory.isVisible = false
     }
 

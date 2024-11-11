@@ -1,27 +1,30 @@
-package com.example.playlistmaker.media_library.ui
+package com.example.playlistmaker.media_library.ui.favorites
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.playlistmaker.R
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.search.ui.TrackListAdapter
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.TrackListAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-private const val CLICK_DEBOUNCE_DELAY = 1000L
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
+    companion object {
+        fun newInstance(): FavoritesFragment {
+            return FavoritesFragment()
+        }
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
     private val viewModel : FavoritesViewModel by viewModel()
 
     private var isClickAllowed = true
@@ -37,7 +40,7 @@ class FavoritesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentFavoriteBinding.inflate(inflater, container,false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -46,8 +49,10 @@ class FavoritesFragment : Fragment() {
 
         trackAdapter = TrackListAdapter {
             if (clickDebounce()) {
-                findNavController().navigate(R.id.action_favoritesFragment_to_playerActivity,
-                    PlayerActivity.createArgs(it))
+                findNavController().navigate(
+                    R.id.action_favoritesFragment_to_playerFragment,
+                    PlayerFragment.createArgs(it)
+                )
             }
         }
         setupRecyclerView()
@@ -101,11 +106,5 @@ class FavoritesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(): FavoritesFragment {
-            return FavoritesFragment()
-        }
     }
 }
