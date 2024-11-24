@@ -57,4 +57,10 @@ class CreateNewPlaylistRepositoryImpl(
             appDatabase.tracksFromThePlaylistDao().insertTrackFromPlaylist(track)
         }
     }
+
+    override fun deletePlaylistById(playlistId: Long): Flow<Long> = flow{
+        CoroutineScope(Dispatchers.IO).launch {
+            appDatabase.playlistDao().deletePlaylistById(playlistId)
+        }
+    }
 }

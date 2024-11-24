@@ -14,7 +14,7 @@ import com.example.playlistmaker.player.data.db.entity.TracksFromThePlaylistEnti
 import com.example.playlistmaker.player.data.db.dao.TracksFromThePlaylistDao
 
 
-@Database(entities = [TrackEntity::class, PlaylistsEntity::class, TracksFromThePlaylistEntity::class], version = 4, exportSchema = false)
+@Database(entities = [TrackEntity::class, PlaylistsEntity::class, TracksFromThePlaylistEntity::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun trackDao(): TrackDao
     abstract fun playlistDao(): PlaylistDao

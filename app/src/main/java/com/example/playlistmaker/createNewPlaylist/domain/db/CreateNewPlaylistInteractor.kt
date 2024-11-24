@@ -9,4 +9,6 @@ interface CreateNewPlaylistInteractor {
     fun updatePlaylist(playlist: Playlist): Flow<Int>
     fun saveCoverPlaylist(uri: String): String
     fun addTrackInPlaylist(track: Track)
+    fun deletePlaylistById(playlistId: Long): Flow<Long>
+
 }

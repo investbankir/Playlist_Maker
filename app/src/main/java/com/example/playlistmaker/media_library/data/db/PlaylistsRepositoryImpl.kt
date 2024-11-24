@@ -5,9 +5,12 @@ import com.example.playlistmaker.media_library.domain.db.PlaylistsRepository
 import com.example.playlistmaker.createNewPlaylist.data.PlaylistDbConvertor
 import com.example.playlistmaker.player.data.TracksFromThePlaylistDbConverter
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 
 class PlaylistsRepositoryImpl(
@@ -30,6 +33,18 @@ class PlaylistsRepositoryImpl(
             listEntity
                 .filter { playlistIdList.contains(it.trackId) }
                 .map { tracksFromThePlaylistDbConverter.map(it) }
+        }
+    }
+
+    override fun deleteTrackById(trackId: Int) {
+        CoroutineScope(Dispatchers.IO).launch{
+            appDatabase.playlistDao().deleteTrackById(trackId)
+        }
+    }
+
+    override fun deletePlaylistById(playlistId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            appDatabase.playlistDao().deletePlaylistById(playlistId)
         }
     }
 }

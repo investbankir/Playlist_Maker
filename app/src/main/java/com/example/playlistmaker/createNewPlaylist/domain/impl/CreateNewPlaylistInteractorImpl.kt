@@ -32,5 +32,9 @@ class CreateNewPlaylistInteractorImpl(
         return repository.addTrackInPlaylist(tracksFromThePlaylist)
     }
 
+    override fun deletePlaylistById(playlistId: Long): Flow<Long> {
+        return repository.deletePlaylistById(playlistId)
+    }
+
 
 }

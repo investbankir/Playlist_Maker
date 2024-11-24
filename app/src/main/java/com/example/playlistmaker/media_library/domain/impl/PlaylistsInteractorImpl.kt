@@ -9,4 +9,13 @@ class PlaylistsInteractorImpl(private val repository: PlaylistsRepository): Play
     override suspend fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
+
+    override fun deleteTrackById(trackId: Int) {
+        return repository.deleteTrackById(trackId)
+    }
+
+    override fun getPlaylistById(playlistId: Long): Flow<Playlist> {
+        return repository.getPlaylistById(playlistId)
+    }
+
 }

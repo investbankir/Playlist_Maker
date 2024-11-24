@@ -5,5 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlaylistsInteractor {
     suspend fun getPlaylists(): Flow<List<Playlist>>
+    fun deleteTrackById (trackId:Int)
+    fun getPlaylistById(playlistId: Long): Flow<Playlist>
+
 
 }

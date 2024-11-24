@@ -13,9 +13,9 @@ enum class PlaylistAddedState {
     SUCCESS,
     EMPTY
 }
-class CreateNewPlaylistViewModel(private val interactor: CreateNewPlaylistInteractor): ViewModel() {
+open class CreateNewPlaylistViewModel(private val interactor: CreateNewPlaylistInteractor): ViewModel() {
     var isCreateNewPlaylistFragmentFiled = false
-    var playlistUri: String = ""
+    var artworkUri: String = ""
     var playlistName: String = ""
     var playlistDescription: String = ""
 
@@ -23,16 +23,17 @@ class CreateNewPlaylistViewModel(private val interactor: CreateNewPlaylistIntera
     val isAddedPlaylist: LiveData<PlaylistAddedState?> get() = _isAddedPlaylist
 
     fun setUri(uri: String) {
-        playlistUri = uri.toString()
+        artworkUri = uri.toString()
         filledIn()
     }
-    fun addNewPlaylist (plalistUri: String) {
+    fun addNewPlaylist (artworkUri: String) {
         val playlist = Playlist (
             0,
             playlistName,
             playlistDescription.ifEmpty { null },
-            if (plalistUri.isNotEmpty()) interactor.saveCoverPlaylist(plalistUri) else null,
+            if (artworkUri.isNotEmpty()) interactor.saveCoverPlaylist(artworkUri) else null,
             mutableListOf(),
+            0,
             0,
         )
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,7 +51,7 @@ class CreateNewPlaylistViewModel(private val interactor: CreateNewPlaylistIntera
         _isAddedPlaylist.value = null
     }
 
-    fun filledIn() {
-        isCreateNewPlaylistFragmentFiled = playlistName.isNotEmpty() || playlistDescription.isNotEmpty() || playlistUri.isNotEmpty()
+    open fun filledIn() {
+        isCreateNewPlaylistFragmentFiled = playlistName.isNotEmpty() || playlistDescription.isNotEmpty() || artworkUri.isNotEmpty()
     }
 }

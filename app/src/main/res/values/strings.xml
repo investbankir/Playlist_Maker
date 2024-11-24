@@ -34,9 +34,24 @@
     <string name="description_hint">Описание</string>
     <string name="Create">Создать</string>
     <string name="PlaylistName">Название альбома</string>
-    <string name="quantityTracks">00 трэков</string>
+    <string name="quantityTracks">00 треков</string>
     <string name="track">track</string>
-
-    description
+    <string name="playlistEmpty">В этом плейлисте ещё нет треков</string>
+    <string name="selectedPlaylistName">Только рок, только хардкор</string>
+    <string name="selectedPlaylistDescription">best of the best</string>
+    <string name="toSharePlaylist">Поделиться</string>
+    <string name="editInformation">Редактировать информацию</string>
+    <string name="deletePlaylist">Удалить плейлист</string>
+    <string name="deleteTrack">Удалить трек</string>
+    <string name="acceptDeleteTrack">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="shareMessage">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="titleSharePlaylist">Поделиться плейлистом</string>
+    <string name="yes">ДА</string>
+    <string name="no">НЕТ</string>
+    <string name="deletePlaylistMessege">Хотите удалить плейлист?</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
 
 </resources>

@@ -7,12 +7,14 @@ import com.example.playlistmaker.createNewPlaylist.domain.models.Playlist
 class PlaylistDbConvertor(private val gson: Gson) {
     fun map(playlist: Playlist): PlaylistsEntity {
         return PlaylistsEntity(
-        playlist.playlistId,
-        playlist.playlistName,
-        playlist.playlistDescription,
-        playlist.artworkUri,
-        gson.toJson(playlist.tracksList),
-        playlist.quantityTracks
+            playlist.playlistId,
+            playlist.playlistName,
+            playlist.playlistDescription,
+            playlist.artworkUri,
+            gson.toJson(playlist.tracksList),
+            playlist.quantityTracks,
+            playlist.totalPlaylistTime,
+            playlist.endingMinute
         )
     }
 
@@ -23,7 +25,9 @@ class PlaylistDbConvertor(private val gson: Gson) {
             playlist.playlistDescription,
             playlist.artworkUri,
             gson.fromJson(playlist.tracksList, Array<Int>::class.java).toCollection(ArrayList()),
-            playlist.quantityTracks
+            playlist.quantityTracks,
+            playlist.totalPlaylistTime,
+            playlist.endingMinute
         )
     }
 }
