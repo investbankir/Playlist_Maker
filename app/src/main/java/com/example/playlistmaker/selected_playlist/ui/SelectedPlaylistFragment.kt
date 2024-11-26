@@ -1,10 +1,14 @@
     package com.example.playlistmaker.selected_playlist.ui
 
+    import android.content.Context
     import android.content.Intent
+    import android.content.res.Resources
+    import android.graphics.Rect
     import android.os.Bundle
     import android.view.LayoutInflater
     import android.view.View
     import android.view.ViewGroup
+    import android.view.WindowManager
     import android.widget.Toast
     import androidx.core.os.bundleOf
     import androidx.core.view.isVisible
@@ -21,6 +25,7 @@
     import com.example.playlistmaker.createNewPlaylist.domain.models.Playlist
     import com.example.playlistmaker.player.ui.PlayerFragment
     import com.example.playlistmaker.createNewPlaylist.ui.PlaylistEditorFragment
+    import com.google.android.material.bottomnavigation.BottomNavigationView
     import com.google.android.material.bottomsheet.BottomSheetBehavior
     import com.google.android.material.dialog.MaterialAlertDialogBuilder
     import kotlinx.coroutines.delay
@@ -83,7 +88,7 @@
 
             val bottomSheetConteiner = binding.tracksBottomSheet
             val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetConteiner).apply {
-                state = BottomSheetBehavior.STATE_COLLAPSED//Разобраться со статусами БШ
+                state = BottomSheetBehavior.STATE_HIDDEN//Разобраться со статусами БШ
             }
 
             bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
@@ -155,6 +160,7 @@
             }
 
             binding.menu.setOnClickListener{
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 editingBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
 
@@ -170,8 +176,8 @@
             }
 
             binding.deletePlaylist.setOnClickListener {
-                deletePlaylist()
                 editingBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                deletePlaylist()
             }
         }
         private fun sharePlaylist() {
@@ -203,6 +209,7 @@
                 .setNegativeButton(getString(R.string.no)) { _, _ -> }
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
                     viewModel.deletePlaylistById(playlistId)
+                    findNavController().popBackStack()
                 }.show()
         }
 
@@ -215,6 +222,13 @@
                 .into(binding.playerCover)
             binding.playlistName.text = playlist.playlistName
             binding.playlistDescription.text = playlist.playlistDescription
+
+            Glide.with(this)
+                .load(playlist.artworkUri)
+                .placeholder(R.drawable.ic_album_placeholder)
+                .centerCrop()
+                .into(binding.album)
+            binding.plName.text = playlist.playlistName
 
         }
         private fun showTracks (tracklist: List<Track>) {
@@ -240,4 +254,28 @@
             }
             return current
         }
+
+//        fun Fragment.getBottomNavHeight(): Int {
+//            val bottomNav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+//            return bottomNav?.height ?: 0
+//        }
+//
+//        fun View.getDistanceToBottomScreen(fragment: Fragment, marginTop: Int): Int {
+//            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//
+//            val rect = Rect()
+//            this.getGlobalVisibleRect(rect)
+//
+//            val windowMetrics = Resources.getSystem().displayMetrics
+//            val windowHeight = windowMetrics.heightPixels
+//
+//            val navigationHeight = fragment.getBottomNavHeight()
+//
+//            return windowHeight - rect.bottom - navigationHeight - marginTop
+//        }
+//
+//        binding.buttonShare.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+//            val mainBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
+//            mainBottomSheetBehavior.peekHeight = v.getDistanceToBottomScreen(this, 25)
+//        }
     }

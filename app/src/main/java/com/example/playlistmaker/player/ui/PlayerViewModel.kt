@@ -53,6 +53,7 @@ class PlayerViewModel(
     var playlistName: String = ""
 
     fun updatePlaylist(playlist: Playlist, track: Track) {
+        createNewPlaylistInteractor.addTrackInPlaylist(track)
         viewModelScope.launch(Dispatchers.IO) {
             val isAdded = playlist.tracksList.none { it == track.trackId }
             if (isAdded) {

@@ -5,6 +5,7 @@ import com.example.playlistmaker.media_library.domain.db.PlaylistsRepository
 import com.example.playlistmaker.createNewPlaylist.data.PlaylistDbConvertor
 import com.example.playlistmaker.player.data.TracksFromThePlaylistDbConverter
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.player.data.db.entity.TracksFromThePlaylistEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -30,10 +31,14 @@ class PlaylistsRepositoryImpl(
 
     override fun getTracksFromPlaylists(playlistIdList: List<Int>): Flow<List<Track>> {
         return appDatabase.playlistDao().allTheTracksInThePlaylist().map { listEntity ->
-            listEntity
-                .filter { playlistIdList.contains(it.trackId) }
-                .map { tracksFromThePlaylistDbConverter.map(it) }
+            tracksFilter(listEntity, playlistIdList)
         }
+    }
+    private fun tracksFilter (listEntity: List<TracksFromThePlaylistEntity>,  playlistIdList: List<Int>): List<Track> {
+        val result = mutableListOf<Track>()
+        for (track: TracksFromThePlaylistEntity in listEntity) if (playlistIdList.any { it == track.trackId})
+            result.add(tracksFromThePlaylistDbConverter.map(track))
+        return result
     }
 
     override fun deleteTrackById(trackId: Int) {

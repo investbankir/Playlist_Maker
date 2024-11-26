@@ -23,7 +23,7 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists_table WHERE plalistId = :plalistId")
     fun getPlaylistById(plalistId: Long): PlaylistsEntity
 
-    @Query("SELECT * FROM track_table ORDER BY addedTimestamp DESC")
+    @Query("SELECT * FROM tracksFromThePlaylist_table ORDER BY addedTimestamp DESC")
     fun allTheTracksInThePlaylist(): Flow<List<TracksFromThePlaylistEntity>>
 
     @Query("DELETE FROM tracksFromThePlaylist_table WHERE trackId = :trackId")
