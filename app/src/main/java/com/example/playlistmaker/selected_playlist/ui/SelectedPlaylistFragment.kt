@@ -52,7 +52,6 @@
         private var isClickAllowed = true
         private var tracks = ArrayList<Track>()
         private var playlist: Playlist? = null
-        //private var playlistId: Long = 0L
         private val playlistId: Long by lazy { requireArguments().getLong(ARGS_PLAYLIST_ID) }
         val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
@@ -79,17 +78,40 @@
             }
 
             viewModel.getTracksFromPlaylistsLiveData().observe(viewLifecycleOwner) { tracklist ->
-                binding.durationAllTracks.text ="${playlist?.totalPlaylistTime?.milliseconds?.inWholeMinutes} ${playlist?.endingMinute}"
+                binding.durationAllTracks.text = viewModel.totalDurationPlaylist(tracklist)
                 binding.numberOfTracks.text = viewModel.rightEndingTracks(tracklist.size)
                 binding.quantityTracks.text = viewModel.rightEndingTracks(tracklist.size)
                 showTracks(tracklist)
             }
 
+            fun Fragment.getBottomNavHeight(): Int {
+                val bottomNav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+                return bottomNav?.height ?: 0
+            }
+
+            fun View.getDistanceToBottomScreen(fragment: Fragment, marginTop: Int): Int {
+                val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
+                val rect = Rect()
+                this.getGlobalVisibleRect(rect)
+
+                val windowMetrics = Resources.getSystem().displayMetrics
+                val windowHeight = windowMetrics.heightPixels
+
+                val navigationHeight = fragment.getBottomNavHeight()
+                return windowHeight - rect.bottom - navigationHeight - marginTop
+            }
+
+            binding.share.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                val mainBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
+                mainBottomSheetBehavior.peekHeight = v.getDistanceToBottomScreen(this, 24)
+            }
 
             val bottomSheetConteiner = binding.tracksBottomSheet
             val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetConteiner).apply {
-                state = BottomSheetBehavior.STATE_HIDDEN//Разобраться со статусами БШ
+                state = BottomSheetBehavior.STATE_HIDDEN
             }
+
 
             bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -153,15 +175,17 @@
             adapter.tracks = tracks
             binding.rvTrackList.adapter = adapter
             binding.rvTrackList.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL, false)
-            showTracks(tracks) // Не даёт результатов отображения в РВ. Перепроверить
+            //showTracks(tracks) // Не даёт результатов отображения в РВ. Перепроверить
+
 
             binding.share.setOnClickListener {
             sharePlaylist()
             }
 
             binding.menu.setOnClickListener{
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 editingBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+             //   Toast.makeText(requireContext(), "Кто здесь?", Toast.LENGTH_SHORT ).show()
+
             }
 
             binding.sharePlaylist.setOnClickListener{
@@ -172,7 +196,7 @@
             binding.editPlaylist.setOnClickListener{
                 findNavController().navigate(
                     R.id.action_selectedPlaylistFragment_to_playlistEditorFragment,
-                    PlaylistEditorFragment.createArgs(playlistId!!))
+                    PlaylistEditorFragment.createArgs(playlist!!))
             }
 
             binding.deletePlaylist.setOnClickListener {
@@ -205,13 +229,14 @@
         private fun deletePlaylist() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getString(R.string.deletePlaylist))
-                .setMessage(getString(R.string.deletePlaylistMessege) + " \"" + playlist?.playlistName + "\"?")
-                .setNegativeButton(getString(R.string.no)) { _, _ -> }
-                .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                .setMessage(getString(R.string.acceptDeletePlaylist))
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                .setPositiveButton(getString(R.string.delete)) { _, _ ->
                     viewModel.deletePlaylistById(playlistId)
                     findNavController().popBackStack()
                 }.show()
         }
+
 
         fun showPlaylist(playlist: Playlist) {
             Glide.with(this)
@@ -254,28 +279,9 @@
             }
             return current
         }
+        override fun onResume() {
+            super.onResume()
+            isClickAllowed = true
+        }
 
-//        fun Fragment.getBottomNavHeight(): Int {
-//            val bottomNav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-//            return bottomNav?.height ?: 0
-//        }
-//
-//        fun View.getDistanceToBottomScreen(fragment: Fragment, marginTop: Int): Int {
-//            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-//
-//            val rect = Rect()
-//            this.getGlobalVisibleRect(rect)
-//
-//            val windowMetrics = Resources.getSystem().displayMetrics
-//            val windowHeight = windowMetrics.heightPixels
-//
-//            val navigationHeight = fragment.getBottomNavHeight()
-//
-//            return windowHeight - rect.bottom - navigationHeight - marginTop
-//        }
-//
-//        binding.buttonShare.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-//            val mainBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
-//            mainBottomSheetBehavior.peekHeight = v.getDistanceToBottomScreen(this, 25)
-//        }
     }

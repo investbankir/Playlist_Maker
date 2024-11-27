@@ -1,5 +1,6 @@
 package com.example.playlistmaker.media_library.domain.db
 
+import com.example.playlistmaker.createNewPlaylist.data.db.entity.PlaylistsEntity
 import kotlinx.coroutines.flow.Flow
 import com.example.playlistmaker.createNewPlaylist.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
@@ -12,4 +13,5 @@ interface PlaylistsRepository {
     fun getTracksFromPlaylists(playlistIdList: List<Int>): Flow<List<Track>>
     fun deleteTrackById (trackId:Int)
 
-    fun deletePlaylistById (playlistId:Long)}
+    fun deletePlaylistById (playlistId:Long)
+}

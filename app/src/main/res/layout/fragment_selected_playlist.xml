@@ -26,34 +26,28 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="16dp" />
 
-        <LinearLayout
-            android:id="@+id/areaForTheCover"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen360">
+        <ImageView
+            android:id="@+id/playerCover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_player_placeholder" />
 
-            <ImageButton
-                android:id="@+id/playlistBackButton"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                app:tint="@color/blackNight"
-                android:layout_width="@dimen/dimen48"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_arrow_back" />
+        <ImageButton
+            android:id="@+id/playlistBackButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            app:tint="@color/blackNight"
+            android:layout_width="@dimen/dimen48"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back"
+            tools:ignore="contentDescription" />
 
-            <ImageView
-                android:id="@+id/playerCover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen24"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_player_placeholder" />
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/playlistName"
@@ -66,7 +60,7 @@
             android:textFontWeight="700"
             android:textSize="@dimen/text24"
             app:layout_constraintStart_toStartOf="@id/leftBorder"
-            app:layout_constraintTop_toBottomOf="@id/areaForTheCover" />
+            app:layout_constraintTop_toBottomOf="@id/playerCover" />
 
         <TextView
             android:id="@+id/playlistDescription"
@@ -153,11 +147,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_selected_playlist"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="266dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        android:visibility="visible">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View
             style="@style/RectangleBottomSheet"
@@ -198,7 +191,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:behavior_peekHeight="380dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <View
             style="@style/RectangleBottomSheet"

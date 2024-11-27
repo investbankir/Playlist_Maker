@@ -28,7 +28,7 @@ open class CreateNewPlaylistFragment: Fragment() {
         val URIKEY = "uriKey"
     }
 
-    private val viewModel: CreateNewPlaylistViewModel  by viewModel()
+    open val viewModel: CreateNewPlaylistViewModel by viewModel()
 
     private var _binding : FragmentNewPlaylistBinding? = null
     val binding get() = _binding!!

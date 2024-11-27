@@ -50,6 +50,24 @@ class SelectedPlaylistViewModel(
         }
     }
 
+    fun totalDurationPlaylist (tracklist: List<Track>): String {
+        var duration =0.0f
+
+        for (track: Track in tracklist) {
+            val minutes = (track.trackTimeMillis ?: 0L) / 60000
+            val seconds = (track.trackTimeMillis ?: 0L) % 60000 / 1000
+
+            val formattedTime = "%02d:%02d".format(minutes, seconds)
+
+            val srtList = formattedTime.split(":")
+            val min = srtList[0].toInt()
+            val sec = srtList[1].toInt()
+            duration += min + sec / 60.0f
+        }
+        val totalDurationToInt = duration.toInt()
+        return rightEndingMinutes(totalDurationToInt)
+    }
+
     fun updatePlaylist(playlist: Playlist, track: Track) {
         val trackId = track.trackId
         playlist.tracksList.remove(trackId)
@@ -87,6 +105,15 @@ class SelectedPlaylistViewModel(
             else -> " треков"
         }
         return quantityTracks.toString() + ending
+    }
+
+    fun rightEndingMinutes(count: Int): String {
+        val str = when (count % 10) {
+            1 -> " минута"
+            2, 3, 4 -> " минуты"
+            else -> " минут"
+        }
+        return count.toString() + str
     }
 
     private fun checkTrack (trackId: Int, list: List<Playlist>): Boolean {

@@ -44,6 +44,7 @@
     <string name="deletePlaylist">Удалить плейлист</string>
     <string name="deleteTrack">Удалить трек</string>
     <string name="acceptDeleteTrack">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="acceptDeletePlaylist">Вы уверены, что хотите удалить этот плейлист?</string>
     <string name="cancel">Отмена</string>
     <string name="delete">Удалить</string>
     <string name="shareMessage">В этом плейлисте нет списка треков, которым можно поделиться</string>

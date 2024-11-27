@@ -8,16 +8,20 @@ import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.createNewPlaylist.domain.models.Playlist
+import org.koin.core.parameter.parametersOf
 
 
 class PlaylistEditorFragment: CreateNewPlaylistFragment() {
     companion object{
-        private const val ARGS_PLAYLIST_ID = "playlist_id"
-        fun createArgs(playlistId: Long): Bundle =
-            bundleOf(ARGS_PLAYLIST_ID to playlistId)
+        private const val ARGS_PLAYLIST = "playlist_id"
+        fun createArgs(playlist: Playlist): Bundle =
+            bundleOf(ARGS_PLAYLIST to playlist)
     }
 
-    private val viewModel by viewModel<PlaylistEditorViewModel>()
+
+    override val viewModel by viewModel<PlaylistEditorViewModel>()
+
+
     private var playlist: Playlist? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,9 +32,10 @@ class PlaylistEditorFragment: CreateNewPlaylistFragment() {
         binding.titleCreatePlaylist.text = getString(R.string.edit)
         binding.createPlaylistButtom.text = getString(R.string.save)
 
-        showThePlaylistCover(playlist?.artworkUri?.toUri())
         binding.namePlaylistEditText.setText(playlist?.playlistName)
         binding.descriptionPlaylistEditText.setText(playlist?.playlistDescription)
+        showThePlaylistCover(playlist?.artworkUri?.toUri())
+
     }
 
     override fun saveNewPlaylist(artworkUri: String) {
@@ -40,9 +45,9 @@ class PlaylistEditorFragment: CreateNewPlaylistFragment() {
 
     private fun getPlaylist(): Playlist?  {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireArguments().getSerializable(ARGS_PLAYLIST_ID, Playlist::class.java)
+            requireArguments().getSerializable(ARGS_PLAYLIST, Playlist::class.java)
         } else {
-            requireArguments().getSerializable(ARGS_PLAYLIST_ID) as Playlist
+            requireArguments().getSerializable(ARGS_PLAYLIST) as Playlist
         }
     }
 }
