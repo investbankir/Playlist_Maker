@@ -16,8 +16,6 @@ class PlaylistEditorViewModel(
     var endingMinute: String = "минут"
     override fun filledIn() { }
 
-    //Полечить отображение данных в редактируемом ПЛ, разобраться с высотой БШ
-
     fun savePlaylist(editablePlaylistId: Long?, editableArtworkUri: String?,editableTracksList: MutableList<Int>?) {
         val playlist = Playlist (
             editablePlaylistId!!,
