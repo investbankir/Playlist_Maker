@@ -9,7 +9,6 @@ import com.example.playlistmaker.createNewPlaylist.domain.db.CreateNewPlaylistIn
 import com.example.playlistmaker.selected_playlist.domain.api.SelectedPlaylistInteractor
 import com.example.playlistmaker.createNewPlaylist.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.selected_playlist.ui.PlaylistDeleteState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

@@ -8,7 +8,6 @@ import androidx.core.os.bundleOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.R
 import com.example.playlistmaker.createNewPlaylist.domain.models.Playlist
-import org.koin.core.parameter.parametersOf
 
 
 class PlaylistEditorFragment: CreateNewPlaylistFragment() {

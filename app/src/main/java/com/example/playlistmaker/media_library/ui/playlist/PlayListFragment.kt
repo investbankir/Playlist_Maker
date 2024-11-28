@@ -11,7 +11,6 @@ import com.example.playlistmaker.R
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
-import com.example.playlistmaker.search.ui.SearchFragment
 import com.example.playlistmaker.selected_playlist.ui.SelectedPlaylistFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

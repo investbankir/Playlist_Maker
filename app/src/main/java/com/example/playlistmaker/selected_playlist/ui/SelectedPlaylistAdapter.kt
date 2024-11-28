@@ -3,7 +3,6 @@ package com.example.playlistmaker.selected_playlist.ui
 import android.view.LayoutInflater
 import com.example.playlistmaker.search.domain.models.Track
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemLongClickListener
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.TrackViewHolder
 import androidx.recyclerview.widget.RecyclerView
