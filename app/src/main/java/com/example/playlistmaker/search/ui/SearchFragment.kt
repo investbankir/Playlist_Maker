@@ -195,6 +195,7 @@ class SearchFragment: Fragment() {
         binding.rvTrackList.isVisible = true
         binding.clearButtonHistory.isVisible = false
         binding.SearchResult.isVisible = false
+        binding.titleSearchHistory.isVisible = false
         binding.searchHistory.isVisible = true
     }
     private fun showNothingFound() {

@@ -35,7 +35,7 @@ class App : Application() {
                 selectedPlaylistModule))
         }
         sharedPrefs = getSharedPreferences(LOG_SWITCHER, MODE_PRIVATE)
-        val isDarkThemeFromPrefs = sharedPrefs.getBoolean(KEY_SWITCHER_THEME, false)
+        sharedPrefs.getBoolean(KEY_SWITCHER_THEME, false)
 
         applySavedTheme()
     }
