@@ -6,10 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.playlistmaker.R
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
+import com.example.playlistmaker.selected_playlist.ui.SelectedPlaylistFragment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -18,6 +22,7 @@ class PlayListFragment : Fragment() {
         fun newInstance(): PlayListFragment {
             return PlayListFragment()
         }
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private val viewModel : PlaylistViewModel by viewModel()
@@ -39,11 +44,17 @@ class PlayListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PlaylistAdapter{}
-
         binding.newPlayListButton.setOnClickListener {
             findNavController().navigate(R.id.action_mediaLibraryFragment_to_createNewPlaylistFragment2)
         }
+
+        adapter = PlaylistAdapter {
+            if (clickDebounce()) {
+            findNavController().navigate(R.id.action_mediaLibraryFragment_to_selectedPlaylistFragment,
+                SelectedPlaylistFragment.createArgs(it))
+            }
+        }
+       // binding.rvPlaylists.adapter {        }
 
         binding.rvPlaylists.adapter = adapter
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -58,7 +69,6 @@ class PlayListFragment : Fragment() {
             }
         }
     }
-
     private fun showPlaceholder() {
         binding.rvPlaylists.isVisible = false
         binding.imageML.isVisible = true
@@ -70,7 +80,22 @@ class PlayListFragment : Fragment() {
         binding.imageML.isVisible = false
         binding.textPlaceholder.isVisible = false
     }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
 
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

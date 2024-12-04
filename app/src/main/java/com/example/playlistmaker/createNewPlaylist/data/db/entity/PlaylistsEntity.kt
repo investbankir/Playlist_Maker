@@ -11,5 +11,7 @@ data class PlaylistsEntity(
     val playlistDescription: String?,
     val artworkUri: String?,
     val tracksList: String?,
-    val quantityTracks: Int?
+    val quantityTracks: Int?,
+    val totalPlaylistTime: Int,
+    val endingMinute: String = "минут"
 )

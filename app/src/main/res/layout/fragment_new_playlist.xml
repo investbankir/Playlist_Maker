@@ -19,6 +19,7 @@
             style="@style/SettingsBackButton" />
 
         <TextView
+            android:id="@+id/titleCreatePlaylist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dimen16"
@@ -70,6 +71,7 @@
             android:textColor="?attr/colorOnSecondary">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/namePlaylistEditText"
                 android:hint="@string/name_hint"
                 style="@style/newPlaylistEditText"/>
 
@@ -88,6 +90,7 @@
             android:textColor="?attr/colorOnSecondary">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descriptionPlaylistEditText"
                 style="@style/newPlaylistEditText"
                 android:hint="@string/description_hint"/>
 

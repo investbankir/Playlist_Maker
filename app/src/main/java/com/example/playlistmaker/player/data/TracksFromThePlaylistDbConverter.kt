@@ -16,6 +16,7 @@ class TracksFromThePlaylistDbConverter {
             track.country,
             track.trackTimeMillis,
             track.previewUrl,
+            System.currentTimeMillis()
         )
     }
 

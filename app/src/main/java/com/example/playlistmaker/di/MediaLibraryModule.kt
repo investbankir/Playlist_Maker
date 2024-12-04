@@ -34,8 +34,6 @@ val mediaLibraryModule = module {
     factory { TrackDbConvertor() }
     factory { TracksFromThePlaylistDbConverter() }
 
-
-
     single<FavoriteRepository> {
         FavoriteRepositoryImpl(get(),get())
     }

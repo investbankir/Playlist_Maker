@@ -21,22 +21,22 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class CreateNewPlaylistFragment: Fragment() {
+open class CreateNewPlaylistFragment: Fragment() {
     
     lateinit var confirmDialog: MaterialAlertDialogBuilder
     companion object{
         val URIKEY = "uriKey"
     }
 
-    private val viewModel: CreateNewPlaylistViewModel  by viewModel()
+    open val viewModel: CreateNewPlaylistViewModel by viewModel()
 
     private var _binding : FragmentNewPlaylistBinding? = null
-    private val binding get() = _binding!!
-    var playlistUri: String = ""
+    val binding get() = _binding!!
+    var artworkUri: String = ""
 
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {uri ->
         if (uri != null) {
-            playlistUri = uri.toString()
+            artworkUri = uri.toString()
             viewModel.setUri(uri.toString())
             showThePlaylistCover(uri)
         }
@@ -55,13 +55,13 @@ class CreateNewPlaylistFragment: Fragment() {
         viewModel.isCreateNewPlaylistFragmentFiled = false
 
         if (savedInstanceState != null) {
-            playlistUri = savedInstanceState.getString(URIKEY, null) ?: ""
+            artworkUri = savedInstanceState.getString(URIKEY, null) ?: ""
         } else {
-            playlistUri = viewModel.playlistUri ?: ""
+            artworkUri = viewModel.artworkUri ?: ""
         }
 
-        if (playlistUri.isNotEmpty()) {
-            showThePlaylistCover(playlistUri.toUri())
+        if (artworkUri.isNotEmpty()) {
+            showThePlaylistCover(artworkUri.toUri())
         }
         binding.nameNewPlaylist.editText?.setText(viewModel.playlistName)
         binding.descriptionNewPlaylist.editText?.setText(viewModel.playlistDescription)
@@ -113,7 +113,7 @@ class CreateNewPlaylistFragment: Fragment() {
         }
 
         binding.createPlaylistButtom.setOnClickListener{
-            saveNewPlaylist(playlistUri)
+            saveNewPlaylist(artworkUri)
         }
 
         binding.backBattonNewPlaylist.setOnClickListener {
@@ -134,8 +134,8 @@ class CreateNewPlaylistFragment: Fragment() {
             }
         })
     }
-    fun saveNewPlaylist(playlistUri: String) {
-        viewModel.addNewPlaylist(playlistUri)
+    open fun saveNewPlaylist(artworkUri: String) {
+        viewModel.addNewPlaylist(artworkUri)
     }
     fun showThePlaylistCover (uri: Uri?) {
         if (uri != null) {
@@ -163,7 +163,7 @@ class CreateNewPlaylistFragment: Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(URIKEY, playlistUri)
+        outState.putString(URIKEY, artworkUri)
     }
     override fun onDestroyView() {
         super.onDestroyView()

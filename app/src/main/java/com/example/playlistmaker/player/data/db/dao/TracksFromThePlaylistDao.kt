@@ -7,5 +7,5 @@ import com.example.playlistmaker.player.data.db.entity.TracksFromThePlaylistEnti
 @Dao
 interface   TracksFromThePlaylistDao {
     @Insert(entity = TracksFromThePlaylistEntity::class, onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTrackFromPlaylist(track: TracksFromThePlaylistEntity)
+    fun insertTrackFromPlaylist(track: TracksFromThePlaylistEntity)
 }

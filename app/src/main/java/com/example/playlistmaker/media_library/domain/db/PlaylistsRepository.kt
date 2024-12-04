@@ -10,4 +10,7 @@ interface PlaylistsRepository {
     fun getPlaylistById(playlistId: Long): Flow<Playlist>
 
     fun getTracksFromPlaylists(playlistIdList: List<Int>): Flow<List<Track>>
+    fun deleteTrackById (trackId:Int)
+
+    fun deletePlaylistById (playlistId:Long)
 }

@@ -10,5 +10,6 @@ interface CreateNewPlaylistRepository {
     fun updatePlaylist(playlist: PlaylistsEntity): Flow<Int>
     fun saveCoverPlaylist(uri: String): String
     fun addTrackInPlaylist(track: TracksFromThePlaylistEntity)
+    fun deletePlaylistById(playlistId: Long): Flow<Long>
 
 }

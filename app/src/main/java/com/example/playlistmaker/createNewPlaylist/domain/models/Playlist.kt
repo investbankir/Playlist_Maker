@@ -9,4 +9,6 @@ data class Playlist(
     val artworkUri: String?,
     val tracksList: MutableList<Int>,
     val quantityTracks: Int?,
+    val totalPlaylistTime: Int,
+    val endingMinute: String = "минут"
 ): Serializable
